@@ -3,19 +3,15 @@ class CBProCurrencies:
     @staticmethod
     def get_all_pairs():
         return [
-            "BTC-USD",
-            "BTC-EUR",
-            "ETH-USD",
-            "ETH-EUR",
-            "LTC-USD",
-            "LTC-EUR",
-            "BCH-USD",
-            "BCH-EUR",
-            "ETC-USD",
-            "ETC-EUR",
-            "BCH-BTC",
-            "ETH-BTC",
-            "LTC-BTC"
+            "ADA-GBP",
+            "BTC-GBP",
+            "DOT-GBP",
+            "CGLD-GBP",
+            "ETH-GBP",
+            "DOGE-GBP",
+            "FORTH-GBP",
+            "LTC-GBP",
+            "NU-GBP"
         ]
 
     @staticmethod
