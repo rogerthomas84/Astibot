@@ -3,6 +3,7 @@ import math
 from pyqtgraph.Qt import QtCore, QtGui
 # noinspection PyUnresolvedReferences
 from PyQt5.QtWidgets import QFrame
+# noinspection PyUnresolvedReferences
 from PyQt5.Qt import QIntValidator
 # noinspection PyUnresolvedReferences
 from PyQt5.Qt import QDoubleValidator
