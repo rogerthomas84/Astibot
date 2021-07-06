@@ -49,7 +49,7 @@ class UIDonation(QtGui.QWidget):
         self.setWindowTitle('Astibot')
         self.setStyleSheet("background-color:#203044;")
         self.setWindowIcon(QtGui.QIcon("AstibotIcon.png"))
-        self.setAutoFillBackground(True);
+        self.setAutoFillBackground(True)
         self.setFixedSize(450, 350)
         
         # Build layout
@@ -154,19 +154,19 @@ class UIDonation(QtGui.QWidget):
         self.lblTitleDonating = QtGui.QLabel("Donate & Contribute to Astibot project")
 
                     
-        self.lblTitleDonating.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET);
+        self.lblTitleDonating.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET)
         self.mainGridLayout.addWidget(self.lblTitleDonating, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
         
         self.lblSubTitleDonating = QtGui.QLabel("If you like this project or if you make money with it: please donate to help me make this software better!")        
-        self.lblSubTitleDonating.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSubTitleDonating.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSubTitleDonating.setWordWrap(True)
         self.mainGridLayout.addWidget(self.lblSubTitleDonating, rowNumber, 0, 1, 2)        
         rowNumber = rowNumber + 1
         
         # Available BTC Balance
         self.lblAvailableBTCBalanceText = QtGui.QLabel("<b>Available BTC Balance:</b>")
-        self.lblAvailableBTCBalanceText.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblAvailableBTCBalanceText.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblAvailableBTCBalanceText.setFixedHeight(28)
         if (self.BTCBalance >= 0):
             if (self.BTCBalance >= theConfig.CONFIG_DONATION_DEFAULT_AMOUNT_IN_BTC):
@@ -175,14 +175,14 @@ class UIDonation(QtGui.QWidget):
                 self.lblAvailableBTCBalance = QtGui.QLabel("%s BTC (insufficient funds)" % str(round(float(self.BTCBalance))))
         else:
             self.lblAvailableBTCBalance = QtGui.QLabel("-- BTC")
-        self.lblAvailableBTCBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblAvailableBTCBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.mainGridLayout.addWidget(self.lblAvailableBTCBalanceText, rowNumber, 0)
         self.mainGridLayout.addWidget(self.lblAvailableBTCBalance, rowNumber, 1)
         rowNumber = rowNumber + 1
         
         # Donation amount entry
         self.lblYourDonation = QtGui.QLabel("<b>Your donation (BTC):</b>")
-        self.lblYourDonation.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblYourDonation.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblYourDonation.setFixedHeight(28)
         
         self.txtDonationAmountEntry = QtGui.QLineEdit()

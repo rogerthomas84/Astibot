@@ -116,7 +116,7 @@ class UIGraph():
         
         # Customize main widget (window)
         self.mainWidget.setStyleSheet("background-color:#203044;")
-        self.mainWidget.setAutoFillBackground(True);
+        self.mainWidget.setAutoFillBackground(True)
                
         # By default consider the data series will start now. This can be overridden 
         self.MostRecentPointTimestamp = time.time()
@@ -347,7 +347,7 @@ class UIGraph():
         self.buttonInfo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         
         self.lblVersion = QtGui.QLabel("Version " + str(theConfig.CONFIG_VERSION))
-        self.lblVersion.setStyleSheet(self.STR_QLABEL_VERSION_STYLESHEET);
+        self.lblVersion.setStyleSheet(self.STR_QLABEL_VERSION_STYLESHEET)
         self.lblVersion.setAlignment(QtCore.Qt.AlignLeft)
         self.lblVersion.setFixedHeight(28)
         
@@ -374,17 +374,17 @@ class UIGraph():
         self.rootBottomBlock.setFixedHeight(40)
 
         self.rootHboxBottom = QtGui.QHBoxLayout()
-        self.rootHboxBottom.setContentsMargins(40, 0, 40, 0) # left, top, right, bottom
+        self.rootHboxBottom.setContentsMargins(40, 0, 40, 0)  # left, top, right, bottom
         self.rootVboxBottomRight = QtGui.QVBoxLayout()
         self.lblConnection = QtGui.QLabel("")
         self.lblConnection.setAlignment(QtCore.Qt.AlignRight)
-        self.lblToolTip.setStyleSheet(self.STR_QLABEL_TOOLTIP_STYLESHEET);
-        self.lblToolTip.setWordWrap(True);
+        self.lblToolTip.setStyleSheet(self.STR_QLABEL_TOOLTIP_STYLESHEET)
+        self.lblToolTip.setWordWrap(True)
         self.lblToolTip.setFixedWidth((self.MAIN_WINDOW_WIDTH_IN_PX / 2))
         self.lblToolTip.setFixedHeight(42)
-        self.lblConnection.setStyleSheet(self.STR_QLABEL_CONNECTION_STATUS_STYLESHEET);
+        self.lblConnection.setStyleSheet(self.STR_QLABEL_CONNECTION_STATUS_STYLESHEET)
         self.lblLiveData = QtGui.QLabel("")
-        self.lblLiveData.setStyleSheet(self.STR_QLABEL_LIVE_DATA_STYLESHEET);
+        self.lblLiveData.setStyleSheet(self.STR_QLABEL_LIVE_DATA_STYLESHEET)
         self.lblLiveData.setAlignment(QtCore.Qt.AlignRight)
         self.lblConnection.setAlignment(QtCore.Qt.AlignRight)
         self.rootHboxBottom.addWidget(self.lblToolTip, QtCore.Qt.AlignLeft)
@@ -409,7 +409,7 @@ class UIGraph():
     def initializeTopWindowWidgets(self):
         
         # Pre requisite for further inits
-        self.lblToolTip = QtGui.QLabel("");
+        self.lblToolTip = QtGui.QLabel("")
         
         self.rootMiddleBlock1 = QtGui.QWidget()
         self.rootMiddleBlock1.setStyleSheet(self.STR_BORDER_BLOCK_STYLESHEET)
@@ -429,13 +429,13 @@ class UIGraph():
         self.radioButtonSimulation = RadioHoverSimulation(self.lblToolTip, self.STR_RADIO_SIMULATION)
         self.radioButtonSimulation.setChecked(False)
         self.radioButtonSimulation.setFixedWidth(200)
-        self.radioButtonSimulation.setStyleSheet(self.STR_QRADIOBUTTON_STYLESHEET);
+        self.radioButtonSimulation.setStyleSheet(self.STR_QRADIOBUTTON_STYLESHEET)
         self.radioButtonSimulation.toggled.connect(self.EventRadioModeToggle)
         self.radioButtonSimulation.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.radioButtonTrading = RadioHoverTrading(self.lblToolTip, self.STR_RADIO_TRADING)
         self.radioButtonTrading.setChecked(True)
         self.radioButtonTrading.setFixedWidth(200)
-        self.radioButtonTrading.setStyleSheet(self.STR_QRADIOBUTTON_STYLESHEET);
+        self.radioButtonTrading.setStyleSheet(self.STR_QRADIOBUTTON_STYLESHEET)
         self.radioButtonTrading.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.buttonPause = ButtonHoverPause(self.lblToolTip, self.STR_BUTTON_PAUSE)
         self.buttonPause.setVisible(True)
@@ -459,11 +459,11 @@ class UIGraph():
         self.hBox1.addWidget(self.buttonStart, QtCore.Qt.AlignLeft)
         
         # Slider Risk level
-        self.lblRiskLevelSlider1 = QtGui.QLabel("Risk level: ");
+        self.lblRiskLevelSlider1 = QtGui.QLabel("Risk level: ")
         self.lblRiskLevelSlider1.setFixedWidth(140)
-        self.lblRiskLevelSlider2 = QtGui.QLabel("Low");
-        self.lblRiskLevelSlider2.setFixedWidth(30);
-        self.lblRiskLevelSlider3 = QtGui.QLabel("High");
+        self.lblRiskLevelSlider2 = QtGui.QLabel("Low")
+        self.lblRiskLevelSlider2.setFixedWidth(30)
+        self.lblRiskLevelSlider3 = QtGui.QLabel("High")
         self.lblRiskLevelSlider3.setFixedWidth(30)
         self.sliderRiskLevel = SliderHoverRiskLevel(self.lblToolTip, QtCore.Qt.Horizontal)
         self.sliderRiskLevel.setMinimum(0)
@@ -478,11 +478,11 @@ class UIGraph():
         self.lblRiskLevelSlider3.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.sliderRiskLevel.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         
-        self.lblSensitivityLevelSlider1 = QtGui.QLabel("Dips sensitivity: ");
+        self.lblSensitivityLevelSlider1 = QtGui.QLabel("Dips sensitivity: ")
         self.lblSensitivityLevelSlider1.setFixedWidth(140)
-        self.lblSensitivityLevelSlider2 = QtGui.QLabel("Low");
+        self.lblSensitivityLevelSlider2 = QtGui.QLabel("Low")
         self.lblSensitivityLevelSlider2.setFixedWidth(30)
-        self.lblSensitivityLevelSlider3 = QtGui.QLabel("High");
+        self.lblSensitivityLevelSlider3 = QtGui.QLabel("High")
         self.lblSensitivityLevelSlider3.setFixedWidth(30)
         self.sliderSensitivityLevel = SliderHoverSensitivityLevel(self.lblToolTip, QtCore.Qt.Horizontal)
         self.sliderSensitivityLevel.setMinimum(1)
@@ -523,12 +523,12 @@ class UIGraph():
         self.lblCryptoMoneyBalance.setFixedHeight(20)
         self.lblTotalGains = QtGui.QLabel(self.STR_LABEL_TOTAL_GAINS)
         
-        self.lblLivePrice.setStyleSheet(self.STR_QLABEL_STYLESHEET);
-        self.lblInfo.setStyleSheet(self.STR_QLABEL_STYLESHEET);
-        self.lblCurrentState.setStyleSheet(self.STR_QLABEL_STYLESHEET);
-        self.lblFiatBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET);
-        self.lblCryptoMoneyBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET);
-        self.lblTotalGains.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblLivePrice.setStyleSheet(self.STR_QLABEL_STYLESHEET)
+        self.lblInfo.setStyleSheet(self.STR_QLABEL_STYLESHEET)
+        self.lblCurrentState.setStyleSheet(self.STR_QLABEL_STYLESHEET)
+        self.lblFiatBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET)
+        self.lblCryptoMoneyBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET)
+        self.lblTotalGains.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         
         # Add widgets to layout
         self.mainGridLayout = QtGui.QGridLayout()   
@@ -792,7 +792,7 @@ class UIGraph():
             self.lblCurrentState.setStyleSheet(self.STR_QLABEL_STYLESHEET)
     
     def UIGR_toogleStatus(self):
-        self.lblCurrentState.setVisible(False);
+        self.lblCurrentState.setVisible(False)
         
     def UIGR_updateTotalProfit(self, realProfit, theoricProfit, percentageProfit, isSimulation):
         self.realProfit = realProfit
@@ -841,7 +841,7 @@ class UIGraph():
             if (self.lblInfoInErrorStyle == True):
                 self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_ERROR_STYLESHEET)
             else:
-                self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_STYLESHEET);
+                self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_STYLESHEET)
                 
             # Automatic style change if needed
             if ((("Welcome" in self.lblInfoStr) == True)):
@@ -859,9 +859,9 @@ class UIGraph():
     def UIGR_SAFE_updateInfoText(self):
         self.lblInfo.setText(self.lblInfoStr)         
         if (self.lblInfoInErrorStyle == True):
-            self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_ERROR_STYLESHEET);
+            self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_ERROR_STYLESHEET)
         else:
-            self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_STYLESHEET);
+            self.lblInfo.setStyleSheet(self.STR_QLABEL_INFO_STYLESHEET)
         pass
         
     def UIGR_updateLoadingDataProgress(self, progressInPercent):

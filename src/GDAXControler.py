@@ -70,7 +70,7 @@ class GDAXControler(cbpro.OrderBook):
         # Websocket thread is launched by parent classes
         self.webSocketLock = threading.Lock()
 
-        print("GDAX - GDAX Controler Initialization");
+        print("GDAX - GDAX Controler Initialization")
         
     def GDAX_IsConnectedAndOperational(self):
         return self.IsConnectedAndOperational

@@ -37,7 +37,7 @@ class UIInfo(QtGui.QWidget):
         self.setWindowTitle('Astibot Information')
         self.setStyleSheet("background-color:#203044;")
         self.setWindowIcon(QtGui.QIcon("AstibotIcon.png"))
-        self.setAutoFillBackground(True);
+        self.setAutoFillBackground(True)
         self.setFixedSize(1060, 750)
         
         # Build layout
@@ -79,48 +79,48 @@ class UIInfo(QtGui.QWidget):
         
         # Section 1 ==================================================================================
         self.lblTitleSection1 = QtGui.QLabel("How does Astibot trading strategy work?")                
-        self.lblTitleSection1.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET);        
+        self.lblTitleSection1.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET)
         self.mainGridLayout.addWidget(self.lblTitleSection1, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
         
                 
         self.lblTxtSubtitle1 = QtGui.QLabel()
         self.lblTxtSubtitle1.setWordWrap(True)
-        self.lblTxtSubtitle1.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSubtitle1.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSubtitle1.setText("<p style=\"margin-left: 20px\"><b>- In live trading mode:</b></p>")
         self.mainGridLayout.addWidget(self.lblTxtSubtitle1, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
         
         self.lblTxtSection11 = QtGui.QLabel()
         self.lblTxtSection11.setWordWrap(True)
-        self.lblTxtSection11.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection11.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection11.setText("<p style=\"margin-left: 45px\"><b></b>When running in live trading mode, Astibot updates the price chart every 10 seconds with the most recent middle-market price from Coinbase Pro exchange. It also computes a MACD-like indicator (bottom yellow graph) that helps finding buy and sell opportunities. Astibot strategy is simple:<br/><br/><b>1. Wait the dip.</b> First, Astibot is waiting for a buy opportunity. Ideally buy oppotunities are detected at the end of a dip.<br/><br/><b>2. Buy the dip. </b> If a buy opportunity is detected AND if the current price is below the red dashed line (the « risk line »), Astibot sends a market buy order to Coinbase Pro in order to buy the crypto asset. The amount of fiat money that is invested can be adjusted in the Settings.<br/><br/><b>3. Wait the top. </b> Astibot waits for the next sell oppotunity that would generate a positive profit, in other words which will at least cover the 2 market order fees (buy + sell fees).<br/><br/><b>4. Sell the top. </b> If a sell oppotunity meets the conditions explained at step 3, the entirety of your crypto asset balance is sold into fiat, and you funds should have increased. Then Astibot goes back to step 1 for another trade<br/>")
         self.mainGridLayout.addWidget(self.lblTxtSection11, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
         
         self.lblTxtSubtitle1 = QtGui.QLabel()
         self.lblTxtSubtitle1.setWordWrap(True)
-        self.lblTxtSubtitle1.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSubtitle1.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSubtitle1.setText("<p style=\"margin-left: 20px\"><b>- In Simulation mode:</b></p>")
         self.mainGridLayout.addWidget(self.lblTxtSubtitle1, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
         
         self.lblTxtSection12 = QtGui.QLabel()
         self.lblTxtSection12.setWordWrap(True)
-        self.lblTxtSection12.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection12.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection12.setText("<p style=\"margin-left: 45px\"><b></b>In simulation mode, Trading strategy is the same as in Live trading mode, excepted that it is performed on historic samples that quickly scroll allowing you to test different tunnings or trading pairs. No orders are sent to Coinbase Pro in simulation mode, trades are entirely simulated. <br/>Simulation mode will familiarise you with Astibot trading strategy and how to tune it. <br/></p>")
         self.mainGridLayout.addWidget(self.lblTxtSection12, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
         
         # Section 2 ==================================================================================
         self.lblTitleSection2 = QtGui.QLabel("What is displayed on the graphs ?")                
-        self.lblTitleSection2.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET);        
+        self.lblTitleSection2.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET)
         self.mainGridLayout.addWidget(self.lblTitleSection2, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1        
             
         self.lblTxtSubtitle21 = QtGui.QLabel()
         self.lblTxtSubtitle21.setWordWrap(True)
-        self.lblTxtSubtitle21.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSubtitle21.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSubtitle21.setText("<p style=\"margin-left: 20px\"><b>- Main Graph:</b></p>")
         self.mainGridLayout.addWidget(self.lblTxtSubtitle21, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
@@ -133,7 +133,7 @@ class UIInfo(QtGui.QWidget):
         
         self.lblTxtSection21 = QtGui.QLabel()
         self.lblTxtSection21.setWordWrap(True)
-        self.lblTxtSection21.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection21.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection21.setText("Estimate of the trading pair price")
         self.mainGridLayout.addWidget(self.lblTxtSection21, rowNumber, 1, 1, 1)
         rowNumber = rowNumber + 1
@@ -146,7 +146,7 @@ class UIInfo(QtGui.QWidget):
         
         self.lblTxtSection22 = QtGui.QLabel()
         self.lblTxtSection22.setWordWrap(True)
-        self.lblTxtSection22.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection22.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection22.setText("Price slow moving average. The smoothing intensity can be set with the sensitivity cursor. This chart is used for the bottom (yellow graph) computation.")
         self.mainGridLayout.addWidget(self.lblTxtSection22, rowNumber, 1, 1, 1)
         rowNumber = rowNumber + 1
@@ -159,7 +159,7 @@ class UIInfo(QtGui.QWidget):
         
         self.lblTxtSection23 = QtGui.QLabel()
         self.lblTxtSection23.setWordWrap(True)
-        self.lblTxtSection23.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection23.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection23.setText("Price fast moving average. The smoothing intensity can be set with the sensitivity cursor. This chart is used for the bottom (yellow graph) computation.")
         self.mainGridLayout.addWidget(self.lblTxtSection23, rowNumber, 1, 1, 1)
         rowNumber = rowNumber + 1
@@ -172,7 +172,7 @@ class UIInfo(QtGui.QWidget):
         
         self.lblTxtSection24 = QtGui.QLabel()
         self.lblTxtSection24.setWordWrap(True)
-        self.lblTxtSection24.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection24.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection24.setText("Risk line: This is the maximum buy level. Astibot only performs buy transactions if the current price is below this line. The purpose of this line is to avoid opening a trade too high that could hardly be sold. You are free to set your own risk level thanks to the Risk level cursor.  This line also evolves automatically to match the average market level (based on the last few hours), but its value is weighted by the risk level you set.")
         self.mainGridLayout.addWidget(self.lblTxtSection24, rowNumber, 1, 1, 1)
         rowNumber = rowNumber + 1
@@ -185,7 +185,7 @@ class UIInfo(QtGui.QWidget):
         
         self.lblTxtSection25 = QtGui.QLabel()
         self.lblTxtSection25.setWordWrap(True)
-        self.lblTxtSection25.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection25.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection25.setText("Approximate positions of the buy (green symbol) and sell (red symbol) transactions performed by Astibot.")
         self.mainGridLayout.addWidget(self.lblTxtSection25, rowNumber, 1, 1, 1)
         rowNumber = rowNumber + 1
@@ -193,7 +193,7 @@ class UIInfo(QtGui.QWidget):
         # Bottom chart -------------------------------
         self.lblTxtSubtitle21 = QtGui.QLabel()
         self.lblTxtSubtitle21.setWordWrap(True)
-        self.lblTxtSubtitle21.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSubtitle21.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSubtitle21.setText("<p style=\"margin-left: 20px\"><b>- Bottom Graph:</b></p>")
         self.mainGridLayout.addWidget(self.lblTxtSubtitle21, rowNumber, 0, 1, 2)
         rowNumber = rowNumber + 1
@@ -205,7 +205,7 @@ class UIInfo(QtGui.QWidget):
         
         self.lblTxtSection26 = QtGui.QLabel()
         self.lblTxtSection26.setWordWrap(True)
-        self.lblTxtSection26.setStyleSheet(self.STR_QLABEL_STYLESHEET);   
+        self.lblTxtSection26.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTxtSection26.setText("<b></b>Decision indicator chart. It is computed with the subtraction of the blue and orange smoothed prices. It is similar to the well known MACD indicator. If it goes from negative to positive, Astibot will interpret it as a buy signal. A positive to negative change is identified as a sell signal. The influence of the sensitivity setting is directly visible on this graph as if you increase the sensitivity, more buy and sell signals will appear.")
         self.mainGridLayout.addWidget(self.lblTxtSection26, rowNumber, 1, 1, 1)
         rowNumber = rowNumber + 1

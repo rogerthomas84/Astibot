@@ -42,7 +42,7 @@ class UISettings(QtGui.QWidget):
         self.setWindowTitle('Astibot Settings')
         self.setStyleSheet("background-color:#203044;")
         self.setWindowIcon(QtGui.QIcon("AstibotIcon.png"))
-        self.setAutoFillBackground(True);
+        self.setAutoFillBackground(True)
         self.setFixedSize(646, 660)
         
         # Build layout
@@ -309,13 +309,13 @@ class UISettings(QtGui.QWidget):
         
         # Trading Account layout ===========================================================
         self.lblTitleTradingAccount = QtGui.QLabel("Coinbase Pro Connection parameters")
-        self.lblTitleTradingAccount.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET);
+        self.lblTitleTradingAccount.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET)
         self.mainGridLayout1.addWidget(self.lblTitleTradingAccount, rowNumber, 0)
         rowNumber = rowNumber + 1
         
         # API Key
         self.lblAPIKey = QtGui.QLabel("API Key:")
-        self.lblAPIKey.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblAPIKey.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblAPIKey.setFixedHeight(30)
         self.lblAPIKey.setContentsMargins(20,0,0,0)
         self.mainGridLayout1.addWidget(self.lblAPIKey, rowNumber, 0)
@@ -326,7 +326,7 @@ class UISettings(QtGui.QWidget):
         
         # Secret Key
         self.lblSecretKey = QtGui.QLabel("Secret Key:")
-        self.lblSecretKey.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSecretKey.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSecretKey.setFixedHeight(30)
         self.lblSecretKey.setContentsMargins(20,0,0,0)
         self.mainGridLayout1.addWidget(self.lblSecretKey, rowNumber, 0)
@@ -338,7 +338,7 @@ class UISettings(QtGui.QWidget):
         
         # Passphrase
         self.lblPassPhrase = QtGui.QLabel("Passphrase:")
-        self.lblPassPhrase.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblPassPhrase.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblPassPhrase.setFixedHeight(30)
         self.lblPassPhrase.setContentsMargins(20,0,0,0)
         self.mainGridLayout1.addWidget(self.lblPassPhrase, rowNumber, 0)
@@ -351,7 +351,7 @@ class UISettings(QtGui.QWidget):
         # Authorization checkbox
         self.lblPermissions = QtGui.QLabel("Note: Make sure you enabled the <b>View</b> and <b>Trade</b> permissions when creating your API keys on your Coinbase Pro profile. These permissions are required for Astibot to operate.")
         self.lblPermissions.setWordWrap(True)
-        self.lblPermissions.setStyleSheet(self.STR_QLABEL_NOTE_STYLESHEET);
+        self.lblPermissions.setStyleSheet(self.STR_QLABEL_NOTE_STYLESHEET)
         self.lblAuthorization = QtGui.QLabel(self.STR_CHECKBOX_AUTHORIZATION_TEXT)
         self.lblAuthorization.setStyleSheet(self.STR_QCHECKBOX_LABEL_STYLESHEET)
         self.lblAuthorization.setWordWrap(True)
@@ -367,13 +367,13 @@ class UISettings(QtGui.QWidget):
         
         # Trading Parameters layout ========================================================
         self.lblTitleTradingParameters = QtGui.QLabel("Trading parameters")
-        self.lblTitleTradingParameters.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET);
+        self.lblTitleTradingParameters.setStyleSheet(self.STR_QLABEL_TITLE_STYLESHEET)
         self.mainGridLayout2.addWidget(self.lblTitleTradingParameters, rowNumber, 0)
         rowNumber = rowNumber + 1
 
         # Trading pair
         self.lblTradingPair = QtGui.QLabel("Trading pair:")
-        self.lblTradingPair.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblTradingPair.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTradingPair.setFixedHeight(30)
         self.lblTradingPair.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblTradingPair, rowNumber, 0)
@@ -388,7 +388,7 @@ class UISettings(QtGui.QWidget):
         
         # Fiat amount to invest
         self.lblFiatPercentageToInvest = QtGui.QLabel("Percentage of " + self.theSettings.SETT_GetSettings()["strFiatType"] + " account balance to invest in trades:")
-        self.lblFiatPercentageToInvest.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblFiatPercentageToInvest.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblFiatPercentageToInvest.setFixedHeight(30)
         self.lblFiatPercentageToInvest.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblFiatPercentageToInvest, rowNumber, 0)
@@ -400,7 +400,7 @@ class UISettings(QtGui.QWidget):
         self.sliderFiatAmount.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         self.sliderFiatAmount.valueChanged.connect(self.EventMovedSliderFiatAmountInvest)
         self.lblFiatAmountValue = QtGui.QLabel("90 %")
-        self.lblFiatAmountValue.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblFiatAmountValue.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblFiatAmountValue.setFixedWidth(self.RIGHT_LABELS_WIDTH_IN_PX)
         self.hBoxFiatAmount.addWidget(self.sliderFiatAmount)
         self.hBoxFiatAmount.addWidget(self.lblFiatAmountValue)
@@ -409,7 +409,7 @@ class UISettings(QtGui.QWidget):
     
         # Coinbase Pro Taker fee
         self.lblTakerFee = QtGui.QLabel("Coinbase Pro Taker and Maker order fee:")
-        self.lblTakerFee.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblTakerFee.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTakerFee.setFixedHeight(30)
         self.lblTakerFee.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblTakerFee, rowNumber, 0)
@@ -421,7 +421,7 @@ class UISettings(QtGui.QWidget):
         self.sliderTakerFee.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         self.sliderTakerFee.valueChanged.connect(self.EventMovedSliderTakerFee)
         self.lblTakerFeePercent = QtGui.QLabel("%")
-        self.lblTakerFeePercent.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblTakerFeePercent.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblTakerFeePercent.setFixedWidth(self.RIGHT_LABELS_WIDTH_IN_PX)
         self.hBoxTakerFee = QtGui.QHBoxLayout()
         self.hBoxTakerFee.addWidget(self.sliderTakerFee)
@@ -431,7 +431,7 @@ class UISettings(QtGui.QWidget):
         
         # Sell trigger
         self.lblSellTrigger = QtGui.QLabel("Auto-Sell trigger (% above buy price, set 0 to disable):")
-        self.lblSellTrigger.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSellTrigger.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSellTrigger.setFixedHeight(30)
         self.lblSellTrigger.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblSellTrigger, rowNumber, 0)
@@ -443,7 +443,7 @@ class UISettings(QtGui.QWidget):
         self.sliderSellTrigger.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         self.sliderSellTrigger.valueChanged.connect(self.EventMovedSliderSellTrigger)
         self.lblSellTriggerPercent = QtGui.QLabel("%")
-        self.lblSellTriggerPercent.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSellTriggerPercent.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSellTriggerPercent.setFixedWidth(self.RIGHT_LABELS_WIDTH_IN_PX)
         self.hBoxSellTrigger = QtGui.QHBoxLayout()
         self.hBoxSellTrigger.addWidget(self.sliderSellTrigger)
@@ -453,7 +453,7 @@ class UISettings(QtGui.QWidget):
         
         # Auto-sell by percentage threshold
         self.lblAutoSellThreshold = QtGui.QLabel("Stop-loss trigger (% below buy price, set 0 to disable):")
-        self.lblAutoSellThreshold.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblAutoSellThreshold.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblAutoSellThreshold.setFixedHeight(30)
         self.lblAutoSellThreshold.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblAutoSellThreshold, rowNumber, 0)
@@ -465,7 +465,7 @@ class UISettings(QtGui.QWidget):
         self.sliderAutoSellThreshold.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         self.sliderAutoSellThreshold.valueChanged.connect(self.EventMovedSliderAutoSell)
         self.lblAutoSellPercent = QtGui.QLabel("%")
-        self.lblAutoSellPercent.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblAutoSellPercent.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblAutoSellPercent.setFixedWidth(self.RIGHT_LABELS_WIDTH_IN_PX)
         self.hBoxAutoSell = QtGui.QHBoxLayout()
         self.hBoxAutoSell.addWidget(self.sliderAutoSellThreshold)
@@ -475,7 +475,7 @@ class UISettings(QtGui.QWidget):
         
         # Simulated fiat account balance
         self.lblSimulatedFiatBalance = QtGui.QLabel("Simulated fiat account balance (simulation mode only):")
-        self.lblSimulatedFiatBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSimulatedFiatBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSimulatedFiatBalance.setFixedHeight(30)
         self.lblSimulatedFiatBalance.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblSimulatedFiatBalance, rowNumber, 0)
@@ -484,7 +484,7 @@ class UISettings(QtGui.QWidget):
         self.txtSimulatedFiatBalance.setFixedWidth(80)
         self.txtSimulatedFiatBalance.setValidator(QDoubleValidator())
         self.lblSimulatedFiatBalance = QtGui.QLabel(self.theSettings.SETT_GetSettings()["strFiatType"])
-        self.lblSimulatedFiatBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSimulatedFiatBalance.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSimulatedFiatBalance.setFixedWidth(self.RIGHT_LABELS_WIDTH_IN_PX)
         self.hBoxSimulatedFiatBalance = QtGui.QHBoxLayout()
         self.hBoxSimulatedFiatBalance.addWidget(self.txtSimulatedFiatBalance, QtCore.Qt.AlignLeft)
@@ -494,7 +494,7 @@ class UISettings(QtGui.QWidget):
         
         # Simulation speed
         self.lblSimulationSpeed = QtGui.QLabel("Simulation speed (simulation mode only):")
-        self.lblSimulationSpeed.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSimulationSpeed.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSimulationSpeed.setFixedHeight(30)
         self.lblSimulationSpeed.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblSimulationSpeed, rowNumber, 0)
@@ -505,9 +505,9 @@ class UISettings(QtGui.QWidget):
         self.sliderSimulationSpeed.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         self.sliderSimulationSpeed.valueChanged.connect(self.EventMovedSliderSimulationSpeed)
         self.lblSlow = QtGui.QLabel("Slow")
-        self.lblSlow.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSlow.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblFast = QtGui.QLabel("Fast")
-        self.lblFast.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblFast.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblFast.setFixedWidth(self.RIGHT_LABELS_WIDTH_IN_PX)
         self.hBoxSimulationSpeed = QtGui.QHBoxLayout()
         self.hBoxSimulationSpeed.addWidget(self.lblSlow)
@@ -519,11 +519,11 @@ class UISettings(QtGui.QWidget):
         # Simulation time range
         self.lblSimulationTimeRange = QtGui.QLabel("Simulation time range (simulation mode only):")
         self.lblSimulationTimeRange.setFixedHeight(30)
-        self.lblSimulationTimeRange.setStyleSheet(self.STR_QLABEL_STYLESHEET);
+        self.lblSimulationTimeRange.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblSimulationTimeRange.setContentsMargins(20,0,0,0)
         self.mainGridLayout2.addWidget(self.lblSimulationTimeRange, rowNumber, 0)
         self.comboSimulationTimeRange = QtGui.QComboBox()
-        self.comboSimulationTimeRange.setView(QtGui.QListView()); # Necessary to allow height change
+        self.comboSimulationTimeRange.setView(QtGui.QListView())  # Necessary to allow height change
         self.comboSimulationTimeRange.addItem("Last 24h")
         self.comboSimulationTimeRange.addItem("Last 48h")
         self.comboSimulationTimeRange.addItem("Last 72h")
