@@ -85,16 +85,24 @@ class UISettings(QtGui.QWidget):
         self.strCryptoType = self.theSettings.SETT_GetSettings()["strCryptoType"]
 
         self.simulationTimeRange = self.theSettings.SETT_GetSettings()["simulationTimeRange"]
-        if self.simulationTimeRange == 24:
+        if self.simulationTimeRange == 6:
             self.comboSimulationTimeRange.setCurrentIndex(0)
-        elif self.simulationTimeRange == 48:
+        elif self.simulationTimeRange == 12:
             self.comboSimulationTimeRange.setCurrentIndex(1)
-        elif self.simulationTimeRange == 72:
+        elif self.simulationTimeRange == 18:
             self.comboSimulationTimeRange.setCurrentIndex(2)
-        elif self.simulationTimeRange == 168:
+        elif self.simulationTimeRange == 24:
             self.comboSimulationTimeRange.setCurrentIndex(3)
+        elif self.simulationTimeRange == 48:
+            self.comboSimulationTimeRange.setCurrentIndex(4)
+        elif self.simulationTimeRange == 72:
+            self.comboSimulationTimeRange.setCurrentIndex(5)
+        elif self.simulationTimeRange == 168:
+            self.comboSimulationTimeRange.setCurrentIndex(6)
+        elif self.simulationTimeRange == 720:
+            self.comboSimulationTimeRange.setCurrentIndex(7)
         else:
-            self.comboSimulationTimeRange.setCurrentIndex(0)
+            self.comboSimulationTimeRange.setCurrentIndex(3)
 
         self.investPercentage = self.theSettings.SETT_GetSettings()["investPercentage"]
         self.sliderFiatAmount.setValue(int(self.investPercentage))
@@ -209,13 +217,21 @@ class UISettings(QtGui.QWidget):
     def EventComboSimulationTimeRange(self):
         print("UIST - Combo Simulation time range set to: %s" % str(self.comboSimulationTimeRange.currentIndex()))
         if self.comboSimulationTimeRange.currentIndex() == 0:
-            self.simulationTimeRange = 24
+            self.simulationTimeRange = 6
         elif self.comboSimulationTimeRange.currentIndex() == 1:
-            self.simulationTimeRange = 48
+            self.simulationTimeRange = 12
         elif self.comboSimulationTimeRange.currentIndex() == 2:
-            self.simulationTimeRange = 72
+            self.simulationTimeRange = 18
         elif self.comboSimulationTimeRange.currentIndex() == 3:
+            self.simulationTimeRange = 24
+        elif self.comboSimulationTimeRange.currentIndex() == 4:
+            self.simulationTimeRange = 48
+        elif self.comboSimulationTimeRange.currentIndex() == 5:
+            self.simulationTimeRange = 72
+        elif self.comboSimulationTimeRange.currentIndex() == 6:
             self.simulationTimeRange = 168
+        elif self.comboSimulationTimeRange.currentIndex() == 7:
+            self.simulationTimeRange = 720
         else:
             pass
 
@@ -527,10 +543,14 @@ class UISettings(QtGui.QWidget):
         self.mainGridLayout2.addWidget(self.lblSimulationTimeRange, rowNumber, 0)
         self.comboSimulationTimeRange = QtGui.QComboBox()
         self.comboSimulationTimeRange.setView(QtGui.QListView())  # Necessary to allow height change
-        self.comboSimulationTimeRange.addItem("Last 24h")
-        self.comboSimulationTimeRange.addItem("Last 48h")
-        self.comboSimulationTimeRange.addItem("Last 72h")
-        self.comboSimulationTimeRange.addItem("Last Week")
+        self.comboSimulationTimeRange.addItem("Last 6 hours")
+        self.comboSimulationTimeRange.addItem("Last 12 hours")
+        self.comboSimulationTimeRange.addItem("Last 18 hours")
+        self.comboSimulationTimeRange.addItem("Last 24 hours")
+        self.comboSimulationTimeRange.addItem("Last 48 hours")
+        self.comboSimulationTimeRange.addItem("Last 72 hours")
+        self.comboSimulationTimeRange.addItem("Last 7 days")
+        self.comboSimulationTimeRange.addItem("Last 30 days")
         self.comboSimulationTimeRange.setStyleSheet(self.STR_COMBO_STYLESHEET)
         self.comboSimulationTimeRange.currentIndexChanged.connect(self.EventComboSimulationTimeRange)
         self.mainGridLayout2.addWidget(self.comboSimulationTimeRange, rowNumber, 1)
