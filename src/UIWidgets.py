@@ -8,7 +8,7 @@ class ButtonHoverStart(QtGui.QPushButton):
         self.lblToolTip = inLblToolTip
 
     def enterEvent(self, QEvent):
-        if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+        if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
             self.lblToolTip.setText("Start / Stop live trading")            
         else:
             self.lblToolTip.setText("Start / Stop simulated trading")
@@ -127,10 +127,10 @@ class LabelClickable(QtGui.QLabel):
     def mousePressEvent(self, event):
         print("QLabelMouseClick")
         
-        if (self.UIsAreSet == True):
-            if (("Welcome" in self.text()) == True):
+        if self.UIsAreSet is True:
+            if ("Welcome" in self.text()) is True:
                 self.theUISettings.UIST_ShowWindow()
-            elif (("here to unlock" in self.text()) == True):
+            elif ("here to unlock" in self.text()) is True:
                 self.theUIDonation.UILI_ShowWindow()
     
                 

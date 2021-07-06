@@ -31,31 +31,31 @@ class AppState(object):
         self.nextAppState = self.currentAppState
         #print(self.currentAppState)
         
-        if (self.currentAppState == 'STATE_INITIALIZATION'):
+        if self.currentAppState == 'STATE_INITIALIZATION':
             self.ManageInitializationState()
-        elif (self.currentAppState == 'STATE_IDLE'):
+        elif self.currentAppState == 'STATE_IDLE':
             self.ManageIdleState()
-        elif (self.currentAppState == 'STATE_SIMULATION_LOADING'):
+        elif self.currentAppState == 'STATE_SIMULATION_LOADING':
             self.ManageSimulationLoadingState()  
-        elif (self.currentAppState == 'STATE_SIMULATION'):
+        elif self.currentAppState == 'STATE_SIMULATION':
             self.ManageSimulationState()
-        elif (self.currentAppState == 'STATE_SIMULATION_STOPPING'):
+        elif self.currentAppState == 'STATE_SIMULATION_STOPPING':
             self.ManageSimulationStoppingState()
-        elif (self.currentAppState == 'STATE_TRADING_LOADING'):
+        elif self.currentAppState == 'STATE_TRADING_LOADING':
             self.ManageTradingLoadingState()                
-        elif (self.currentAppState == 'STATE_TRADING'):
+        elif self.currentAppState == 'STATE_TRADING':
             self.ManageTradingState()                     
-        elif (self.currentAppState == 'STATE_FAILURE'):
+        elif self.currentAppState == 'STATE_FAILURE':
             self.ManageFailureState()          
         else:
-            self.ManageIdleState() # Error case
+            self.ManageIdleState()  # Error case
     
         # If transition requested
-        if (self.nextAppState != self.currentAppState):
+        if self.nextAppState != self.currentAppState:
             self.currentAppState = self.nextAppState
             self.theUIGraph.UIGR_SetCurrentAppState(self.currentAppState)
             
-        if (self.generalPurposeDecreasingCounter > 0):
+        if self.generalPurposeDecreasingCounter > 0:
             self.generalPurposeDecreasingCounter = self.generalPurposeDecreasingCounter - 1
             #print(self.generalPurposeDecreasingCounter)
     
@@ -79,17 +79,17 @@ class AppState(object):
     def ManageInitializationState(self):
         self.theUIGraph.UIGR_updateCurrentState("Initializing...", False, True)
         
-        if (self.theGDAXControler.GDAX_IsConnectedAndOperational() == "True"):
-            if (self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended"):
+        if self.theGDAXControler.GDAX_IsConnectedAndOperational() == "True":
+            if self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended":
                 # Initialization to Idle state transition actions
                 self.nextAppState = 'STATE_IDLE'
                 self.theUIGraph.UIGR_SetStartButtonEnabled(True)
                 self.theUIGraph.UIGR_SetStartButtonAspect("START")
                 self.theUIGraph.UIGR_SetSettingsButtonsEnabled(True)
-                self.theTrader.TRAD_InitiateNewTradingSession(False) # Force accounts balances display refresh
+                self.theTrader.TRAD_InitiateNewTradingSession(False)  # Force accounts balances display refresh
                 self.theUIGraph.UIGR_SetDonationButtonsEnabled(True)
                 print("APPL - Init: go to idle")
-        elif (self.theGDAXControler.GDAX_IsConnectedAndOperational() == "False"):
+        elif self.theGDAXControler.GDAX_IsConnectedAndOperational() == "False":
             self.nextAppState = 'STATE_FAILURE'
             self.theUIGraph.UIGR_SetStartButtonEnabled(False)
             self.theUIGraph.UIGR_SetStartButtonAspect("START_DISABLED")
@@ -107,8 +107,8 @@ class AppState(object):
         
         # User actions analysis ===================================================================
         # If user clicks on "Start"
-        if (self.theUIGraph.UIGR_IsStartButtonClicked() == True):
-            if (self.theUIGraph.UIGR_GetSelectedRadioMode() == "Simulation"):
+        if self.theUIGraph.UIGR_IsStartButtonClicked() is True:
+            if self.theUIGraph.UIGR_GetSelectedRadioMode() == "Simulation":
                 print("APPL - ManageIdleState - StartButtonClicked, going to Simulaltion")
                 # Transition to STATE_SIMULATION_LOADING
                 self.theInputDataHandler.INDH_PrepareHistoricDataSinceGivenHours(False, float(self.theSettings.SETT_GetSettings()["simulationTimeRange"]) + 3.0)
@@ -120,7 +120,7 @@ class AppState(object):
                 self.nextAppState = 'STATE_SIMULATION_LOADING'
             else:
                 # If Fiat balance is OK
-                if (self.theGDAXControler.GDAX_GetFiatAccountBalance() > theConfig.CONFIG_MIN_INITIAL_FIAT_BALANCE_TO_TRADE):
+                if self.theGDAXControler.GDAX_GetFiatAccountBalance() > theConfig.CONFIG_MIN_INITIAL_FIAT_BALANCE_TO_TRADE:
                     print("APPL - ManageIdleState - StartButtonClicked, fiat balance OK, going to Trading")
                     # Transition to STATE_TRADING_LOADING
                     self.theInputDataHandler.INDH_PrepareHistoricDataSinceGivenHours(True, theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING)
@@ -137,12 +137,12 @@ class AppState(object):
     def ManageSimulationLoadingState(self):
         self.theUIGraph.UIGR_updateCurrentState("Downloading and analyzing historic data...", False, True)
         
-        if (self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended"):
+        if self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended":
             # Transition to STATE_SIMULATION            
             self.theUIGraph.UIGR_SetStartButtonEnabled(True)
             self.theUIGraph.UIGR_SetStartButtonAspect("STOP")
             # 5 additional hours are needed aproximately to let indicators to settle
-            if (self.theInputDataHandler.INDH_PerformSimulation(float(self.theSettings.SETT_GetSettings()["simulationTimeRange"]) + 5) == "Ongoing"):
+            if self.theInputDataHandler.INDH_PerformSimulation(float(self.theSettings.SETT_GetSettings()["simulationTimeRange"]) + 5) == "Ongoing":
                 self.nextAppState = 'STATE_SIMULATION'
                 # Set new state in anticipation to UIGR so that it will prepare the right captions
                 self.theUIGraph.UIGR_SetCurrentAppState(self.nextAppState)
@@ -163,11 +163,11 @@ class AppState(object):
         self.theUIGraph.UIGR_updateCurrentState("Ongoing simulation", False, False)
         
         # If user clicked on PAUSE button
-        if (self.theUIGraph.UIGR_IsPauseButtonClicked() == True):
+        if self.theUIGraph.UIGR_IsPauseButtonClicked() is True:
             self.theInputDataHandler.INDH_PauseResumeSimulation()
             
         # If user clicked on STOP button
-        if (self.theUIGraph.UIGR_IsStartButtonClicked() == True):
+        if self.theUIGraph.UIGR_IsStartButtonClicked() is True:
             print("APPL - Simulation state > go to Simulation Stopping because of StartButton clicked")
             self.theInputDataHandler.INDH_StopSimulation()
             # Request graph refresh timer stop from same thread as it was launched (Main / UI Thread)
@@ -182,7 +182,7 @@ class AppState(object):
             self.theUIGraph.UIGR_SetPauseButtonAspect("PAUSE_DISABLED")
             
         # If simulation is ended by itself (end of data buffer)
-        if (self.theInputDataHandler.INDH_GetOperationalStatus() == "Ended"):
+        if self.theInputDataHandler.INDH_GetOperationalStatus() == "Ended":
             print("APPL - Simulation state > go to Idle because of buffer ended")
             # Request graph refresh timer stop from same thread as it was launched (Main / UI Thread)
             self.theUIGraph.UIGR_StopContinuousGraphRefresh()
@@ -200,7 +200,7 @@ class AppState(object):
     
     def ManageSimulationStoppingState(self):
         print("APPL - Simulation Stopping state")
-        if (self.generalPurposeDecreasingCounter == 0):
+        if self.generalPurposeDecreasingCounter == 0:
             self.nextAppState = 'STATE_IDLE'
             self.theUIGraph.UIGR_SetStartButtonEnabled(True)
             self.theUIGraph.UIGR_SetStartButtonAspect("START")
@@ -217,12 +217,12 @@ class AppState(object):
     def ManageTradingLoadingState(self):
         self.theUIGraph.UIGR_updateCurrentState("Downloading and analyzing historic data to prepare trading indicators...", False, True)
         
-        if (self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended"):
+        if self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended":
             print("APPL - ManageTradingLoadingState - PreloadHistoricDataStatus is ended - Going to Trading state")
             # Transition to STATE_TRADING
             self.theUIGraph.UIGR_SetStartButtonEnabled(True)
             self.theUIGraph.UIGR_SetStartButtonAspect("STOP")
-            if (self.theInputDataHandler.INDH_PerformLiveTradingOperation(theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING) == "Ongoing"):
+            if self.theInputDataHandler.INDH_PerformLiveTradingOperation(theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING) == "Ongoing":
                 self.nextAppState = 'STATE_TRADING'
                 # Set new state in anticipation to UIGR so that it will prepare the right captions
                 self.theUIGraph.UIGR_SetCurrentAppState(self.nextAppState)
@@ -246,7 +246,7 @@ class AppState(object):
         self.theUIGraph.UIGR_updateCurrentState("Live trading", True, True)
                         
         # If user clicked on STOP button
-        if (self.theUIGraph.UIGR_IsStartButtonClicked() == True):
+        if self.theUIGraph.UIGR_IsStartButtonClicked() is True:
             print("APPL - Trading state > go to Idle because of StartButton clicked")
             self.theInputDataHandler.INDH_StopLiveTrading()
             # Request graph refresh timer stop from same thread as it was launched (Main / UI Thread)
@@ -263,7 +263,7 @@ class AppState(object):
             self.theTrader.TRAD_TerminateTradingSession()
     
     def ManageFailureState(self):
-        self.theUIGraph.UIGR_updateCurrentState("", False, False) # Don't display error to the user
+        self.theUIGraph.UIGR_updateCurrentState("", False, False)  # Don't display error to the user
         
         self.CheckImpactingSettingsChanges()
         
@@ -277,19 +277,19 @@ class AppState(object):
         
         # If trading pair or API IDs have changed, Notify stakeholders and perform Initialization state entry actions
         # Heavy code because SETT_hasXXXChanged APIs are "read-once"
-        if (self.theSettings.SETT_hasTradingPairChanged() == True):
+        if self.theSettings.SETT_hasTradingPairChanged() is True:
             bTradingPairHasChanged = True
             
-        if (self.theSettings.SETT_hasAPIDataChanged() == True):
+        if self.theSettings.SETT_hasAPIDataChanged() is True:
             bAPIDataHasChanged = True   
             
-        if ((bTradingPairHasChanged == True) or (bAPIDataHasChanged == True)):
-            if (bTradingPairHasChanged == True):
+        if (bTradingPairHasChanged is True) or (bAPIDataHasChanged is True):
+            if bTradingPairHasChanged is True:
                 print("APPL - Trading pair has changed")
                 self.theUIGraph.UIGR_NotifyThatTradingPairHasChanged()
                 self.theGDAXControler.GDAX_NotifyThatTradingPairHasChanged()
             
-            if (bAPIDataHasChanged == True):
+            if bAPIDataHasChanged is True:
                 print("APPL - API data has changed")
                 pass # Nothing specific to do as GDAX will be asked to perform a new connection
                              
@@ -298,7 +298,7 @@ class AppState(object):
             
             
         # Mode change analysis (Live trading or simulation)
-        if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET != self.previousModeWasRealMarket):
+        if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET != self.previousModeWasRealMarket:
             self.previousModeWasRealMarket = theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET            
             # Accounts balances display differs depending on the mode (simulation or trading), we need to refresh it
             self.theTrader.TRAD_InitiateNewTradingSession(False)

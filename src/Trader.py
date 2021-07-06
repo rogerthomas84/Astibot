@@ -31,7 +31,7 @@ class Trader(object):
     def TRAD_InitiateNewTradingSession(self, startSession):
         self.TRAD_ResetTradingParameters()
         self.theTransactionManager.TRNM_InitiateNewTradingSession(startSession)
-        if (startSession == True):
+        if startSession is True:
             theNotifier.SendWhatsappMessage("*Astibot: New trading session* started on the %s trading pair!" % self.theSettings.SETT_GetSettings()["strTradingPair"])
 
     def TRAD_TerminateTradingSession(self):
@@ -44,20 +44,20 @@ class Trader(object):
         self.nextState = self.currentState
         self.updateIndicatorsTransitions()
 
-        if (self.currentState == 'IDLE'):
+        if self.currentState == 'IDLE':
             self.ManageIdleState()
-        elif (self.currentState == 'WAITING_TO_BUY'):
+        elif self.currentState == 'WAITING_TO_BUY':
             self.ManageWaitingToBuyState()
-        elif (self.currentState == 'BUYING'):
+        elif self.currentState == 'BUYING':
             self.ManageBuyingState()
-        elif (self.currentState == 'WAITING_TO_SELL'):
+        elif self.currentState == 'WAITING_TO_SELL':
             self.ManageWaitingToSellState()
-        elif (self.currentState == 'SELLING'):
+        elif self.currentState == 'SELLING':
             self.ManageSellingState()
         else:
-            self.ManageIdleState() # Error case
+            self.ManageIdleState()  # Error case
 
-        if (self.nextState != self.currentState):
+        if self.nextState != self.currentState:
             self.currentState = self.nextState
 
     def TRAD_DEBUG_ForceSell(self): 
@@ -72,7 +72,7 @@ class Trader(object):
 
     def ManageIdleState(self):
         # Check transition to WAITING_TO_BUY or WAITING_TO_SELL state
-        if (self.theMarketData.MRKT_AreIndicatorsEstablished() == True):
+        if self.theMarketData.MRKT_AreIndicatorsEstablished() is True:
             # By default, go to WAITING_TO_BUY state
             self.nextState = 'WAITING_TO_BUY'
 
@@ -95,12 +95,12 @@ class Trader(object):
         isB2ThresholdReached = (self.previousMACDValue < theConfig.CONFIG_MACD_BUY_2_THRESHOLD) and (self.currentMACDValue >= theConfig.CONFIG_MACD_BUY_2_THRESHOLD)
 
         # Check MACD buy signal
-        if (isBUY1ThresholdReached):
+        if isBUY1ThresholdReached:
             # Check current price towards risk line
             riskLineThresholdInFiat = self.theMarketData.MRKT_GetLastRiskLineValue() * theConfig.CONFIG_RiskLinePercentsAboveThresholdToBuy
-            if (self.currentPriceValue < riskLineThresholdInFiat):
+            if self.currentPriceValue < riskLineThresholdInFiat:
                 # Check current price toward maximum allowed buy price
-                if (self.currentPriceValue < theConfig.CONFIG_MAX_BUY_PRICE):                    
+                if self.currentPriceValue < theConfig.CONFIG_MAX_BUY_PRICE:
                     print("TRAD - ManageWaitingToBuyState: B1 reached, limit buy ordered and successful: Going to Buying state ============================================")
                     self.theTransactionManager.TRNM_StartBuyOrSellAttempt("BUY", riskLineThresholdInFiat)
                     self.nextState = 'BUYING'
@@ -108,7 +108,7 @@ class Trader(object):
                     print("TRAD - ManageWaitingToBuyState: Buy not performed : Price is above max allowed limit - price: " + str(self.currentPriceValue))
             else:
                 print("TRAD - ManageWaitingToBuyState: Buy not performed : Price is above the risk line")
-        elif (isB2ThresholdReached):
+        elif isB2ThresholdReached:
             self.ManageBuyingState()
 
                 
@@ -123,19 +123,19 @@ class Trader(object):
         
         #print(currentBuyOrderState)
         
-#        if (currentBuyOrderState == "NONE"):
+#        if currentBuyOrderState == "NONE":
 #            print("TRAD - Buy limit order canceled: go back to WAITING TO BUY state ============================================")
 #            self.nextState = 'WAITING_TO_BUY'
 #            self.theUIGraph.UIGR_updateInfoText("Buy order canceled. Waiting for next buy opportunity", False)
-#        elif (currentBuyOrderState == "FILLED"):
-        if (currentBuyOrderState == "FILLED"):
+#        elif currentBuyOrderState == "FILLED":
+        if currentBuyOrderState == "FILLED":
             self.ongoingBuyOrderWasFree = True
             self.currentBuyPriceInFiat = self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice()  
-            if (self.sellTriggerInPercent > 0.0):
+            if self.sellTriggerInPercent > 0.0:
                 print("TRAD - ManageBuyingState: Buy Order filled and sellTrigger is set, place sell order and go to SELLING ============================================")
                 
                 # In real market conditions, wait for GDAX accounts to be refreshed
-                if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+                if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                     time.sleep(10)
                 
                 self.theTransactionManager.TRNM_StartBuyOrSellAttempt("SELL", self.currentBuyPriceInFiat * (1 + (self.sellTriggerInPercent / 100)))                  
@@ -143,42 +143,42 @@ class Trader(object):
             else: 
                 print("TRAD - ManageBuyingState: Buy Order filled and sellTrigger is not set, go to WAITING TO SELL")
                 self.nextState = 'WAITING_TO_SELL'
-        elif (isB2ThresholdReached):
+        elif isB2ThresholdReached:
             # MACD crossed the B2 threshold
-            if (currentBuyOrderState == "MATCHED"):
+            if currentBuyOrderState == "MATCHED":
                 print("TRAD - ManageBuyingState: B2 reached, canceling ongoing buy order to go to Selling / Waiting to sell state")
                 # Cancel ongoing order: too risky to maintain it
                 self.theTransactionManager.TRNM_CancelOngoingOrder()
                 self.currentBuyPriceInFiat = self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice()
                 self.ongoingBuyOrderWasFree = True
-                if (self.sellTriggerInPercent > 0.0):
+                if self.sellTriggerInPercent > 0.0:
                     print("TRAD - ManageBuyingState: B2 reached, buy Order matched (not filled) and sellTrigger is set, place sell order and go to SELLING ============================================")                   
                     self.nextState = 'SELLING' 
                 else:
                     print("TRAD - ManageBuyingState: B2 reached, buy Order matched (not filled) and sellTrigger is not set, go to WAITING TO SELL ============================================")
                     self.nextState = 'WAITING_TO_SELL'
-            else: # Order still ongoing or no limit order performed
+            else:  # Order still ongoing or no limit order performed
                 # Market buy if enabled and if price is below risk line
                 # Check current price towards risk line
                 riskLineThresholdInFiat = self.theMarketData.MRKT_GetLastRiskLineValue() * theConfig.CONFIG_RiskLinePercentsAboveThresholdToBuy
-                if ((self.currentPriceValue < riskLineThresholdInFiat) and (theConfig.CONFIG_ENABLE_MARKET_ORDERS == True)): 
+                if (self.currentPriceValue < riskLineThresholdInFiat) and (theConfig.CONFIG_ENABLE_MARKET_ORDERS is True):
                     print("TRAD - ManageBuyingState: B2 reached, price below risk, canceling ongoing buy order before sending Market order")
                     # Cancel ongoing order
                     self.theTransactionManager.TRNM_CancelOngoingOrder()
                     # In real market conditions, wait for GDAX accounts to be refreshed
-                    if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+                    if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                         time.sleep(0.8)
                             
-                    if (self.theTransactionManager.TRNM_BuyNow() == True):
+                    if self.theTransactionManager.TRNM_BuyNow() is True:
                         self.nextState = 'WAITING_TO_SELL'
                         self.ongoingBuyOrderWasFree = False
                         self.currentBuyPriceInFiat = self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice()
                         
-                        if (self.sellTriggerInPercent > 0.0):
+                        if self.sellTriggerInPercent > 0.0:
                             print("TRAD - ManageBuyingState: B2 reached, price below risk, Market Buy ordered and successful, sellTrigger is set, place sell order and go to SELLING ============================================")
                                       
                             # In real market conditions, wait for GDAX accounts to be refreshed
-                            if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+                            if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                                 time.sleep(10)
                         
                             self.theTransactionManager.TRNM_StartBuyOrSellAttempt("SELL", self.currentBuyPriceInFiat * (1 + (self.sellTriggerInPercent / 100)))                  
@@ -218,26 +218,26 @@ class Trader(object):
         #isS1ThresholdReached = True
         
         # Compute min ratio to sell without loss
-        if (self.ongoingBuyOrderWasFree == True):
+        if self.ongoingBuyOrderWasFree is True:
             minProfitRatio = theConfig.CONFIG_MIN_PRICE_ELEVATION_RATIO_TO_SELL + 0*float(self.theSettings.SETT_GetSettings()["platformTakerFee"])*0.01
         else:
             minProfitRatio = theConfig.CONFIG_MIN_PRICE_ELEVATION_RATIO_TO_SELL + 1*float(self.theSettings.SETT_GetSettings()["platformTakerFee"])*0.01
         
         # If price is high enough to sell with no loss (covers tax fees + minimum profit ratio)
-        if (risingRatio > minProfitRatio):            
+        if risingRatio > minProfitRatio:
             # Check MACD sell signal
-            if (isS1ThresholdReached):
+            if isS1ThresholdReached:
                 print("TRAD - ManageWaitingToSellState: S1 crossed and rising ratio is OK to sell. Placing limit sell order.")
                 self.theTransactionManager.TRNM_StartBuyOrSellAttempt("SELL", minProfitRatio * float(currentMidMarketPrice))
                 self.nextState = 'SELLING'
-            elif (isS2ThresholdReached): # Market sell
+            elif isS2ThresholdReached:  # Market sell
                 self.ManageSellingState()
             else:
                 pass
                 # Price high enough to sell but no MACD cross
         # If auto-sell threshold is reached, market sell now
-        elif ((isAutoSellThresholdReached) and (self.theSettings.SETT_GetSettings()["autoSellThreshold"] != 0.0)):
-            if (self.theTransactionManager.TRNM_SellNow(True) == True):
+        elif isAutoSellThresholdReached and (self.theSettings.SETT_GetSettings()["autoSellThreshold"] != 0.0):
+            if self.theTransactionManager.TRNM_SellNow(True) is True:
                 self.nextState = 'WAITING_TO_BUY'
                 self.ongoingBuyOrderWasFree = False
                 print("TRAD - ManageWaitingToSellState: Auto-sell Threshold reached, Market Sell ordered and successful: Going to WAITING_TO_BUY ============================================")
@@ -257,47 +257,47 @@ class Trader(object):
         currentMidMarketPrice = self.theMarketData.MRKT_GetLastRefPrice()    
         
         # Buy ongoing
-        if (self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice() > 0):
+        if self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice() > 0:
             risingRatio = float(currentMidMarketPrice) / self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice()
             isAutoSellThresholdReached = risingRatio < (1 - (self.theSettings.SETT_GetSettings()["autoSellThreshold"]/100))
         else:
         # No buy ongoing, for example a sell trigger limit order has filled so currentBuyInitialPrice has been reset
             isAutoSellThresholdReached = False
         
-        #if (currentSellOrderState == "NONE"):
+        #if currentSellOrderState == "NONE":
         #    print("TRAD - ManageSellingState: Sell limit order canceled: go back to WAITING TO SELL state ============================================")
         #    self.nextState = 'WAITING_TO_SELL'
         #    self.theUIGraph.UIGR_updateInfoText("Sell order canceled. Waiting for next sell opportunity", False)
-        #elif (currentSellOrderState == "FILLED"):         
-        if (currentSellOrderState == "FILLED"):         
+        #elif currentSellOrderState == "FILLED":
+        if currentSellOrderState == "FILLED":
             print("TRAD - ManageSellingState: Ongoing sell limit order filled: going to WAITING TO BUY ============================================")
             self.nextState = 'WAITING_TO_BUY'
-        elif (isS2ThresholdReached):
-            if (currentSellOrderState == "MATCHED"):
+        elif isS2ThresholdReached:
+            if currentSellOrderState == "MATCHED":
                 print("TRAD - ManageSellingState: Ongoing sell limit order matched: waiting to complete fill")
                 pass # Do nothing, wait for complete sell 
-            else: # Order is still ongoing
-                if (theConfig.CONFIG_ENABLE_MARKET_ORDERS == True):
+            else:  # Order is still ongoing
+                if theConfig.CONFIG_ENABLE_MARKET_ORDERS is True:
                     currentMidMarketPrice = self.theMarketData.MRKT_GetLastRefPrice() 
                     risingRatio = float(currentMidMarketPrice) / self.theTransactionManager.TRNM_GetCurrentBuyInitialPrice()
             
                     # Compute min ratio to sell without loss
-                    if (self.ongoingBuyOrderWasFree == True):
+                    if self.ongoingBuyOrderWasFree is True:
                         # Count sell order price only, buy was free
                         minProfitRatio = theConfig.CONFIG_MIN_PRICE_ELEVATION_RATIO_TO_SELL + 1*float(self.theSettings.SETT_GetSettings()["platformTakerFee"])*0.01
                     else:
                         minProfitRatio = theConfig.CONFIG_MIN_PRICE_ELEVATION_RATIO_TO_SELL + 2*float(self.theSettings.SETT_GetSettings()["platformTakerFee"])*0.01
              
                     # If profit is positive, market sell
-                    if (risingRatio > minProfitRatio):
+                    if risingRatio > minProfitRatio:
                         print("TRAD - ManageSellingState: S2 reached, price below risk, canceling ongoing sell order before sending Market order")
                         # Cancel ongoing order: too risky to maintain it
                         self.theTransactionManager.TRNM_CancelOngoingOrder()
                         # In real market conditions, wait for GDAX accounts to be refreshed
-                        if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+                        if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                             time.sleep(0.3)
                                 
-                        if (self.theTransactionManager.TRNM_SellNow(False) == True):
+                        if self.theTransactionManager.TRNM_SellNow(False) is True:
                             self.nextState = 'WAITING_TO_BUY'
                             self.ongoingBuyOrderWasFree = False
                             print("TRAD - ManageSellingState: S2 reached, rising ratio profitable, Market Sell ordered and successful: Going to WAITING_TO_BUY ============================================")
@@ -309,16 +309,16 @@ class Trader(object):
                 else:
                     pass
                     # Market orders not allowed. Only try to sell with limit orders                    
-        elif ((isAutoSellThresholdReached) and (self.theSettings.SETT_GetSettings()["autoSellThreshold"] != 0.0)):
+        elif isAutoSellThresholdReached and (self.theSettings.SETT_GetSettings()["autoSellThreshold"] != 0.0):
             print("TRAD - ManageSellingState: Auto-sell Threshold reached, canceling ongoing limit order and performing market sell")
             
             self.theTransactionManager.TRNM_CancelOngoingOrder()
             
             # In real market conditions, wait for GDAX accounts to be refreshed
-            if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+            if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                 time.sleep(0.4)
                 
-            if (self.theTransactionManager.TRNM_SellNow(True) == True):
+            if self.theTransactionManager.TRNM_SellNow(True) is True:
                 self.nextState = 'WAITING_TO_BUY'
                 self.ongoingBuyOrderWasFree = False
                 print("TRAD - ManageSellingState: Auto-sell Threshold reached, Market Sell ordered and successful: Going to WAITING_TO_BUY ============================================")

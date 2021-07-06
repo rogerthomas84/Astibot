@@ -8,6 +8,8 @@ import ctypes # Message box popup
 
 import TradingBotConfig as theConfig
 
+
+# noinspection PyAttributeOutsideInit
 class UISettings(QtGui.QWidget):
     
     STR_CHECKBOX_AUTHORIZATION_TEXT = "By entering your API keys, you accept to leave control of your Coinbase Pro account to this software through the Application Programming Interface (API). It includes algorithm-based buying or selling of fiat money or crypto-assets. You are the only responsible for the actions that are performed by this software through the API, even in case of unfavorable market, inappropriate buy or sell decision, software bug, undesired software behavior or any other undesired activity. Train yourself on the simulator before performing actual trading. Only give control to money / assets that you can afford to loose."
@@ -68,7 +70,7 @@ class UISettings(QtGui.QWidget):
         self.txtPassPhrase.setText(self.theSettings.SETT_GetSettings()["strPassphrase"])
         self.strPassPhraseApplicable = self.theSettings.SETT_GetSettings()["strPassphrase"]
         
-#         if (str(self.theSettings.SETT_GetSettings()["bHasAcceptedConditions"]) == "True"):
+#         if str(self.theSettings.SETT_GetSettings()["bHasAcceptedConditions"]) == "True":
 #             self.checkboxAuthorization.setChecked(True)
 #         else:
 #             self.checkboxAuthorization.setChecked(False)
@@ -81,13 +83,13 @@ class UISettings(QtGui.QWidget):
         self.strCryptoType = self.theSettings.SETT_GetSettings()["strCryptoType"]
         
         self.simulationTimeRange = self.theSettings.SETT_GetSettings()["simulationTimeRange"]
-        if (self.simulationTimeRange == 24):
+        if self.simulationTimeRange == 24:
             self.comboSimulationTimeRange.setCurrentIndex(0)
-        elif (self.simulationTimeRange == 48):
+        elif self.simulationTimeRange == 48:
             self.comboSimulationTimeRange.setCurrentIndex(1)
-        elif (self.simulationTimeRange == 72):
+        elif self.simulationTimeRange == 72:
             self.comboSimulationTimeRange.setCurrentIndex(2)
-        elif (self.simulationTimeRange == 168):
+        elif self.simulationTimeRange == 168:
             self.comboSimulationTimeRange.setCurrentIndex(3)            
         else:
             self.comboSimulationTimeRange.setCurrentIndex(0)
@@ -97,19 +99,19 @@ class UISettings(QtGui.QWidget):
         self.lblFiatAmountValue.setText(str(self.sliderFiatAmount.value()) + " %")
                 
         self.platformTakerFee = self.theSettings.SETT_GetSettings()["platformTakerFee"]
-        self.sliderTakerFee.setValue(float(self.platformTakerFee) * 20.0) # 20 = 1/quantum, a cabler
+        self.sliderTakerFee.setValue(float(self.platformTakerFee) * 20.0)  # 20 = 1/quantum, a cabler
         self.lblTakerFeePercent.setText(str(self.platformTakerFee) + " %")
         
         self.sellTrigger = self.theSettings.SETT_GetSettings()["sellTrigger"]
-        self.sliderSellTrigger.setValue(float(self.sellTrigger) * 20.0) # 20 = 1/quantum, a cabler)
+        self.sliderSellTrigger.setValue(float(self.sellTrigger) * 20.0)  # 20 = 1/quantum, a cabler)
         self.lblSellTriggerPercent.setText(str(self.sellTrigger) + " %")
         
         self.autoSellThreshold = self.theSettings.SETT_GetSettings()["autoSellThreshold"]
-        self.sliderAutoSellThreshold.setValue(float(self.autoSellThreshold) * 4) # 4 = 1/quantum, a cabler
+        self.sliderAutoSellThreshold.setValue(float(self.autoSellThreshold) * 4)  # 4 = 1/quantum, a cabler
         self.lblAutoSellPercent.setText(str(self.autoSellThreshold) + " %")
         
         self.txtSimulatedFiatBalance.setText(str(self.theSettings.SETT_GetSettings()["simulatedFiatBalance"]))
-        self.txtSimulatedFiatBalance.text().replace('.',',') # TODO: ok for french only
+        self.txtSimulatedFiatBalance.text().replace('.', ',')  # TODO: ok for french only
         
         self.simulationSpeed = self.theSettings.SETT_GetSettings()["simulationSpeed"]
         self.sliderSimulationSpeed.setValue(int(self.simulationSpeed))
@@ -117,31 +119,31 @@ class UISettings(QtGui.QWidget):
     def EventApplylButtonClick(self):
         print("UIST - Apply Click")
         
-        if (self.checkParametersValidity() == True):
+        if self.checkParametersValidity() is True:
             # Set settings
             settingsList = self.theSettings.SETT_GetSettings()
             
             settingsList["strAPIKey"] = self.txtAPIKey.text()
-            if (str(settingsList["strAPIKey"]) != self.strAPIKeyApplicable):
+            if str(settingsList["strAPIKey"]) != self.strAPIKeyApplicable:
                 print("UIST - New API Key set")
                 self.strAPIKeyApplicable = str(settingsList["strAPIKey"])
                 self.theSettings.SETT_NotifyAPIDataHasChanged()
-            
+
             settingsList["strSecretKey"] = self.txtSecretKey.text()
-            if (str(settingsList["strSecretKey"]) != self.strSecretKeyApplicable):
+            if str(settingsList["strSecretKey"]) != self.strSecretKeyApplicable:
                 print("UIST - New Secret Key set")
                 self.strSecretKeyApplicable = str(settingsList["strSecretKey"])
                 self.theSettings.SETT_NotifyAPIDataHasChanged()
                 
             settingsList["strPassphrase"] = self.txtPassPhrase.text()
-            if (str(settingsList["strPassphrase"]) != self.strPassPhraseApplicable):
+            if str(settingsList["strPassphrase"]) != self.strPassPhraseApplicable:
                 print("UIST - New API Passphrase set")
                 self.strPassPhraseApplicable = str(settingsList["strPassphrase"])
                 self.theSettings.SETT_NotifyAPIDataHasChanged()
             
             #settingsList["bHasAcceptedConditions"] = self.checkboxAuthorization.isChecked()
             settingsList["strTradingPair"] = self.strTradingPair
-            if (self.strTradingPair != self.strApplicableTradingPair):
+            if self.strTradingPair != self.strApplicableTradingPair:
                 print("UIST - New trading pair set: new %s / old %s" % (self.strTradingPair, self.strApplicableTradingPair))
                 self.strApplicableTradingPair = self.strTradingPair # The new applicable trading pair becomes this one
                 self.theSettings.SETT_NotifyTradingPairHasChanged()
@@ -151,7 +153,7 @@ class UISettings(QtGui.QWidget):
             settingsList["platformTakerFee"] = self.platformTakerFee
             settingsList["sellTrigger"] = self.sellTrigger
             settingsList["autoSellThreshold"] = self.autoSellThreshold
-            settingsList["simulatedFiatBalance"] = self.txtSimulatedFiatBalance.text().replace(',','.')
+            settingsList["simulatedFiatBalance"] = self.txtSimulatedFiatBalance.text().replace(',', '.')
             settingsList["simulationSpeed"] = self.simulationSpeed
             settingsList["simulationTimeRange"] = self.simulationTimeRange
             
@@ -205,19 +207,19 @@ class UISettings(QtGui.QWidget):
         
     def EventComboSimulationTimeRange(self):
         print("UIST - Combo Simulation time range set to: %s" % str(self.comboSimulationTimeRange.currentIndex()))
-        if (self.comboSimulationTimeRange.currentIndex() == 0):
+        if self.comboSimulationTimeRange.currentIndex() == 0:
             self.simulationTimeRange = 24
-        elif (self.comboSimulationTimeRange.currentIndex() == 1):
+        elif self.comboSimulationTimeRange.currentIndex() == 1:
             self.simulationTimeRange = 48
-        elif (self.comboSimulationTimeRange.currentIndex() == 2):
+        elif self.comboSimulationTimeRange.currentIndex() == 2:
             self.simulationTimeRange = 72            
-        elif (self.comboSimulationTimeRange.currentIndex() == 3):
+        elif self.comboSimulationTimeRange.currentIndex() == 3:
             self.simulationTimeRange = 168                     
         else:
             pass
     
     def TimerRaisedBlinkStuff(self):
-        if (self.blinkCounter < 6):
+        if self.blinkCounter < 6:
             self.blinkIsOn = not self.blinkIsOn
             self.UpdateBlinkWidgetsDisplay()
             self.blinkCounter = self.blinkCounter + 1
@@ -226,7 +228,7 @@ class UISettings(QtGui.QWidget):
             self.UpdateBlinkWidgetsDisplay()
         
     def UpdateBlinkWidgetsDisplay(self):
-        if (self.blinkIsOn == True):
+        if self.blinkIsOn is True:
             self.txtAPIKey.setStyleSheet(self.STR_QTEXTEDIT_BLINK_STYLESHEET)
             self.txtPassPhrase.setStyleSheet(self.STR_QTEXTEDIT_BLINK_STYLESHEET)
             self.txtSecretKey.setStyleSheet(self.STR_QTEXTEDIT_BLINK_STYLESHEET)     
@@ -237,9 +239,9 @@ class UISettings(QtGui.QWidget):
            
     def checkParametersValidity(self):
         # Check amount of money to virtually invest in simulation mode
-        if (self.txtSimulatedFiatBalance.text() != ""):
-            fiatBalance = float(self.txtSimulatedFiatBalance.text().replace(',','.'))
-            if ((fiatBalance < theConfig.CONFIG_SIMU_INITIAL_BALANCE_MIN) or (fiatBalance > theConfig.CONFIG_SIMU_INITIAL_BALANCE_MAX)):
+        if self.txtSimulatedFiatBalance.text() != "":
+            fiatBalance = float(self.txtSimulatedFiatBalance.text().replace(',', '.'))
+            if (fiatBalance < theConfig.CONFIG_SIMU_INITIAL_BALANCE_MIN) or (fiatBalance > theConfig.CONFIG_SIMU_INITIAL_BALANCE_MAX):
                 print("UIST - Input range error on Simulated fiat balance to invest")
                 self.MessageBoxPopup("Error: Initial simulated fiat balance entry must be between " + str(theConfig.CONFIG_SIMU_INITIAL_BALANCE_MIN) + " to " + str(theConfig.CONFIG_SIMU_INITIAL_BALANCE_MAX), 0)
                 return False
@@ -560,7 +562,7 @@ class UISettings(QtGui.QWidget):
         self.ApplySettings()
         
         # Start blink timer if relevant
-        if ((self.txtAPIKey.text() == "") or (self.txtSecretKey.text() == "") or (self.txtPassPhrase.text() == "")):
+        if (self.txtAPIKey.text() == "") or (self.txtSecretKey.text() == "") or (self.txtPassPhrase.text() == ""):
             self.timerBlinkStuffs.start(500)
             self.blinkCounter = 0
 

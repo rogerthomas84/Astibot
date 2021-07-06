@@ -2,7 +2,7 @@
 import TradingBotConfig as theConfig
 
 def SendWhatsappMessage(messageToSend):
-    if (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET == True):
+    if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
         pass
         # Your Account Sid and Auth Token from twilio.com/console
 #         account_sid = '<fill id here>'
@@ -17,4 +17,3 @@ def SendWhatsappMessage(messageToSend):
 #                                   )
 #              
 #         print("NOTI - Sent message, %s" % message)
-        

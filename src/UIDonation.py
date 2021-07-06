@@ -62,12 +62,12 @@ class UIDonation(QtGui.QWidget):
         self.withdrawHasBeenPerformed = True
         self.SetWithdrawEnabled(False)
         self.btnWithdrawForDonating.setText("Withdrawing...")        
-        QtGui.QApplication.processEvents() # Force UI to update previous lines, because we will block main UI loop
+        QtGui.QApplication.processEvents()  # Force UI to update previous lines, because we will block main UI loop
         
         # Perform withdraw
         withdrawRequestReturn = self.theTransactionManager.TRNM_WithdrawBTC(theConfig.CONFIG_BTC_DESTINATION_ADDRESS, float(self.txtDonationAmountEntry.text()))
         
-        if (withdrawRequestReturn != "Error"):
+        if withdrawRequestReturn != "Error":
             self.btnWithdrawForDonating.setText("Withdraw successful!")
             self.MessageBoxPopup("Your donation has been successfully sent: Thank you! Coinbase Pro Transfer ID is %s" % withdrawRequestReturn, 0)
         else:
@@ -80,16 +80,16 @@ class UIDonation(QtGui.QWidget):
         self.HideWindow()
     
     def TimerRaisedRefreshBTCBalance(self):
-        if (self.windowIsShown == True):
+        if self.windowIsShown is True:
             # Retrieve balance data
             self.BTCBalance = self.theTransactionManager.TRNM_getBTCBalance()            
             # Fast account refresh required in case the user would currently be withdrawing money, he would like to quickly see the update on the UI
             self.theTransactionManager.TRNM_ForceAccountsUpdate()
             
             try:
-                if (float(self.BTCBalance) >= float(self.txtDonationAmountEntry.text()) and (float(self.txtDonationAmountEntry.text()) >= theConfig.MIN_CRYPTO_AMOUNT_REQUESTED_TO_SELL)):  
+                if float(self.BTCBalance) >= float(self.txtDonationAmountEntry.text()) and (float(self.txtDonationAmountEntry.text()) >= theConfig.MIN_CRYPTO_AMOUNT_REQUESTED_TO_SELL):
                     # If donation has just been performed, do not enable Withdraw button again
-                    if (self.withdrawHasBeenPerformed == False):        
+                    if self.withdrawHasBeenPerformed is False:
                         self.SetWithdrawEnabled(True)                        
                     self.lblAvailableBTCBalance.setText("%s BTC" % str(round(float(self.BTCBalance), 7)))
                 else:
@@ -101,7 +101,7 @@ class UIDonation(QtGui.QWidget):
                 
                 
     def SetWithdrawEnabled(self, bEnable):
-        if (bEnable == True):
+        if bEnable is True:
             self.btnWithdrawForDonating.setStyleSheet(self.STR_QBUTTON_WITHDRAW_ENABLED_STYLESHEET)
         else:
             self.btnWithdrawForDonating.setStyleSheet(self.STR_QBUTTON_WITHDRAW_DISABLED_STYLESHEET)
@@ -168,8 +168,8 @@ class UIDonation(QtGui.QWidget):
         self.lblAvailableBTCBalanceText = QtGui.QLabel("<b>Available BTC Balance:</b>")
         self.lblAvailableBTCBalanceText.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.lblAvailableBTCBalanceText.setFixedHeight(28)
-        if (self.BTCBalance >= 0):
-            if (self.BTCBalance >= theConfig.CONFIG_DONATION_DEFAULT_AMOUNT_IN_BTC):
+        if self.BTCBalance >= 0:
+            if self.BTCBalance >= theConfig.CONFIG_DONATION_DEFAULT_AMOUNT_IN_BTC:
                 self.lblAvailableBTCBalance = QtGui.QLabel("%s BTC" % str(round(float(self.BTCBalance))))
             else:
                 self.lblAvailableBTCBalance = QtGui.QLabel("%s BTC (insufficient funds)" % str(round(float(self.BTCBalance))))

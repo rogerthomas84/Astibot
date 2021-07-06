@@ -68,7 +68,7 @@ class Settings(object):
         self.tradingPairHasChanged = True
         
     def SETT_hasTradingPairChanged(self):
-        if (self.tradingPairHasChanged == True):
+        if self.tradingPairHasChanged is True:
             self.tradingPairHasChanged = False
             return True
         else:
@@ -78,21 +78,21 @@ class Settings(object):
         self.APIDataHasChanged = True
         
     def SETT_hasAPIDataChanged(self):
-        if (self.APIDataHasChanged == True):
+        if self.APIDataHasChanged is True:
             self.APIDataHasChanged = False
             print("SETT - API Data has Changed - returning info")
             return True
         else:
             return False
            
-    ##  Styles:
-    ##  0 : OK
-    ##  1 : OK | Cancel
-    ##  2 : Abort | Retry | Ignore
-    ##  3 : Yes | No | Cancel
-    ##  4 : Yes | No
-    ##  5 : Retry | No 
-    ##  6 : Cancel | Try Again | Continue
+    #  Styles:
+    #  0 : OK
+    #  1 : OK | Cancel
+    #  2 : Abort | Retry | Ignore
+    #  3 : Yes | No | Cancel
+    #  4 : Yes | No
+    #  5 : Retry | No
+    #  6 : Cancel | Try Again | Continue
     def MessageBoxPopup(self, text, style):
         title = "Astibot Settings"
         return ctypes.windll.user32.MessageBoxW(0, text, title, style)
