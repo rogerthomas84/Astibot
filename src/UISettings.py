@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QFrame
 # noinspection PyUnresolvedReferences
 from PyQt5.Qt import QIntValidator
 from PyQt5.Qt import QDoubleValidator
-from GDAXCurrencies import GDAXCurrencies
+from CBProCurrencies import CBProCurrencies
 import ctypes  # Message box popup
 
 import TradingBotConfig as theConfig
@@ -79,7 +79,7 @@ class UISettings(QtGui.QWidget):
 
         self.strTradingPair = self.theSettings.SETT_GetSettings()["strTradingPair"]
         self.strApplicableTradingPair = self.strTradingPair
-        self.comboTradingPair.setCurrentIndex(GDAXCurrencies.get_index_for_currency_pair(self.strTradingPair))
+        self.comboTradingPair.setCurrentIndex(CBProCurrencies.get_index_for_currency_pair(self.strTradingPair))
 
         self.strFiatType = self.theSettings.SETT_GetSettings()["strFiatType"]
         self.strCryptoType = self.theSettings.SETT_GetSettings()["strCryptoType"]
@@ -171,7 +171,7 @@ class UISettings(QtGui.QWidget):
 
     def EventComboTradingPairChanged(self):
         print("UIST - Combo Trading pair set to: %s" % str(self.comboTradingPair.currentIndex()))
-        all_data = GDAXCurrencies.get_currencies_list()
+        all_data = CBProCurrencies.get_currencies_list()
         try:
             a_currency = all_data[self.comboTradingPair.currentIndex()]
             self.strTradingPair = a_currency['full']
@@ -382,7 +382,7 @@ class UISettings(QtGui.QWidget):
         self.mainGridLayout2.addWidget(self.lblTradingPair, rowNumber, 0)
         self.comboTradingPair = QtGui.QComboBox()
         self.comboTradingPair.setView(QtGui.QListView())  # Necessary to allow height change
-        for dictionary in GDAXCurrencies.get_currencies_list():
+        for dictionary in CBProCurrencies.get_currencies_list():
             self.comboTradingPair.addItem(dictionary['full'])
         self.comboTradingPair.currentIndexChanged.connect(self.EventComboTradingPairChanged)
         self.comboTradingPair.setStyleSheet(self.STR_COMBO_STYLESHEET)

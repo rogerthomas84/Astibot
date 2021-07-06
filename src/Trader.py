@@ -134,7 +134,7 @@ class Trader(object):
             if self.sellTriggerInPercent > 0.0:
                 print("TRAD - ManageBuyingState: Buy Order filled and sellTrigger is set, place sell order and go to SELLING ============================================")
 
-                # In real market conditions, wait for GDAX accounts to be refreshed
+                # In real market conditions, wait for CBPro accounts to be refreshed
                 if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                     time.sleep(10)
 
@@ -165,7 +165,7 @@ class Trader(object):
                     print("TRAD - ManageBuyingState: B2 reached, price below risk, canceling ongoing buy order before sending Market order")
                     # Cancel ongoing order
                     self.theTransactionManager.TRNM_CancelOngoingOrder()
-                    # In real market conditions, wait for GDAX accounts to be refreshed
+                    # In real market conditions, wait for CBPro accounts to be refreshed
                     if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                         time.sleep(0.8)
 
@@ -177,7 +177,7 @@ class Trader(object):
                         if self.sellTriggerInPercent > 0.0:
                             print("TRAD - ManageBuyingState: B2 reached, price below risk, Market Buy ordered and successful, sellTrigger is set, place sell order and go to SELLING ============================================")
 
-                            # In real market conditions, wait for GDAX accounts to be refreshed
+                            # In real market conditions, wait for CBPro accounts to be refreshed
                             if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                                 time.sleep(10)
 
@@ -288,7 +288,7 @@ class Trader(object):
                         print("TRAD - ManageSellingState: S2 reached, price below risk, canceling ongoing sell order before sending Market order")
                         # Cancel ongoing order: too risky to maintain it
                         self.theTransactionManager.TRNM_CancelOngoingOrder()
-                        # In real market conditions, wait for GDAX accounts to be refreshed
+                        # In real market conditions, wait for CBPro accounts to be refreshed
                         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                             time.sleep(0.3)
 
@@ -309,7 +309,7 @@ class Trader(object):
 
             self.theTransactionManager.TRNM_CancelOngoingOrder()
 
-            # In real market conditions, wait for GDAX accounts to be refreshed
+            # In real market conditions, wait for CBPro accounts to be refreshed
             if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                 time.sleep(0.4)
 

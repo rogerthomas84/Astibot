@@ -24,9 +24,9 @@ class MarketData:
 
     NB_POINTS_MIN_FOR_ESTABLISHMENT = NB_POINTS_FOR_SLOW_SMOOTH_FILTER
 
-    def __init__(self, GDAXControler, UIGraph):
+    def __init__(self, CBProController, UIGraph):
 
-        self.theGDAXControler = GDAXControler
+        self.theCBProController = CBProController
         self.theUIGraph = UIGraph
 
         # Init model data

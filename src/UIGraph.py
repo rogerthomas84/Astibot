@@ -968,20 +968,23 @@ class UIGraph:
 
     # Perform UI actions due to a trading pair change
     def UIGR_NotifyThatTradingPairHasChanged(self):
-        self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE = self.theSettings.SETT_GetSettings()["strCryptoType"] + str(" MiddleMarket price : ")
+        self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE = self.theSettings.SETT_GetSettings()["strCryptoType"] + str(" middle market price : ")
         self.lblLivePrice.setText(self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE)
 
         # Non destructive "search and replace" because of the possible '(Simulation)' annotation
         self.lblFiatBalance.setText(self.lblFiatBalance.text().replace("USD", "---"))
         self.lblFiatBalance.setText(self.lblFiatBalance.text().replace("EUR", "---"))
+        self.lblFiatBalance.setText(self.lblFiatBalance.text().replace("GBP", "---"))
         self.lblFiatBalance.setText(self.lblFiatBalance.text().replace("---", self.theSettings.SETT_GetSettings()["strFiatType"]))
 
         self.lblCryptoMoneyBalance.setText(self.lblCryptoMoneyBalance.text().replace("USD", "---"))
         self.lblCryptoMoneyBalance.setText(self.lblCryptoMoneyBalance.text().replace("EUR", "---"))
+        self.lblCryptoMoneyBalance.setText(self.lblCryptoMoneyBalance.text().replace("GBP", "---"))
         self.lblCryptoMoneyBalance.setText(self.lblCryptoMoneyBalance.text().replace("---", self.theSettings.SETT_GetSettings()["strFiatType"]))
 
         self.lblTotalGains.setText(self.lblTotalGains.text().replace("USD", "---"))
         self.lblTotalGains.setText(self.lblTotalGains.text().replace("EUR", "---"))
+        self.lblTotalGains.setText(self.lblTotalGains.text().replace("GBP", "---"))
         self.lblTotalGains.setText(self.lblTotalGains.text().replace("---", self.theSettings.SETT_GetSettings()["strFiatType"]))
 
         self.STR_LABEL_FIAT_BALANCE = str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " Account Balance : "

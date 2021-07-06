@@ -1,3 +1,4 @@
+import sys
 import time
 import threading
 
@@ -11,9 +12,9 @@ from Trader import Trader
 # noinspection PyPep8Naming,SpellCheckingInspection,PyShadowingNames,PyAttributeOutsideInit,DuplicatedCode
 class InputDataHandler(object):
 
-    def __init__(self, GDAXControler, UIGraph, MarketData, Trader, Settings):
+    def __init__(self, CBProController, UIGraph, MarketData, Trader, Settings):
 
-        self.theGDAXControler = GDAXControler
+        self.theCBProController = CBProController
         self.theUIGraph = UIGraph
         self.theMarketData = MarketData
         self.theTrader = Trader
@@ -27,7 +28,7 @@ class InputDataHandler(object):
         self.liveTradingStopIsRequested = False
         self.abortOperations = False
 
-        self.currentSubSchedulingFactor = self.theGDAXControler.GDAX_GetHistoricDataSubSchedulingFactor()
+        self.currentSubSchedulingFactor = self.theCBProController.CBPro_GetHistoricDataSubSchedulingFactor()
 
     def INDH_GetPreloadHistoricDataStatus(self):
         # If read once at Ended state, go back to Idle state
@@ -58,12 +59,12 @@ class InputDataHandler(object):
             pass
 
     def GetLoadedDataStartTimestamp(self):
-        return self.theGDAXControler.GDAX_GetLoadedDataStartTimeStamp()
+        return self.theCBProController.CBPro_GetLoadedDataStartTimeStamp()
 
     def GetLoadedDataEndTimestamp(self):
-        return self.theGDAXControler.GDAX_GetLoadedDataStopTimeStamp()
+        return self.theCBProController.CBPro_GetLoadedDataStopTimeStamp()
 
-    # Blocking function that allows GDAXControler to load historic data. Shall be called from a background thread.
+    # Blocking function that allows CBProController to load historic data. Shall be called from a background thread.
     def LoadHistoricData(self, displayWholeBufferAtTheEndArray):
         print("INDH - Thread Load Historic Data: Started")
 
@@ -84,7 +85,7 @@ class InputDataHandler(object):
             startTimeStampToLoadData = self.initialTimeStampInUserTime - (self.nbHoursToPreload * 3600)
             stopTimeStampToLoadData = self.initialTimeStampInUserTime
             print("INDH - Will retrieve Historic price data from %s to %s" % (startTimeStampToLoadData, stopTimeStampToLoadData))
-            self.theGDAXControler.GDAX_LoadHistoricData(startTimeStampToLoadData, stopTimeStampToLoadData)
+            self.theCBProController.CBPro_LoadHistoricData(startTimeStampToLoadData, stopTimeStampToLoadData)
             print("INDH - Historic Data loading ended")
             print("INDH - Display everything in one shot: %s" % displayWholeBufferAtTheEndArray)
         else:
@@ -97,14 +98,14 @@ class InputDataHandler(object):
             self.theMarketData.MRKT_ResetAllData(1)
 
             startTimeStampRequested = time.time() - (theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING * 3600)
-            self.theGDAXControler.GDAX_SetReadIndexFromPos(startTimeStampRequested)
+            self.theCBProController.CBPro_SetReadIndexFromPos(startTimeStampRequested)
 
             nbOfSamplesToDisplayOnGraph = theConfig.CONFIG_NB_POINTS_LIVE_TRADING_GRAPH
             print("INDH - Choosen to display %s points on graph" % nbOfSamplesToDisplayOnGraph)
             self.theUIGraph.UIGR_ResetAllGraphData(False, -1, int(nbOfSamplesToDisplayOnGraph))
 
             # noinspection PyUnusedLocal
-            [self.retrievedTime, self.retrievedPrice, endOfList] = self.theGDAXControler.GDAX_GetNextHistoricDataSample()
+            [self.retrievedTime, self.retrievedPrice, endOfList] = self.theCBProController.CBPro_GetNextHistoricDataSample()
             currentTimeStamp = self.retrievedTime
             endOfList = False
             timeStep = theConfig.CONFIG_TIME_BETWEEN_RETRIEVED_SAMPLES_IN_MS / 1000
@@ -116,7 +117,7 @@ class InputDataHandler(object):
                     self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
                     currentTimeStamp = self.retrievedTime
                     # Get next sample in memory
-                    [self.retrievedTime, self.retrievedPrice, endOfList] = self.theGDAXControler.GDAX_GetNextHistoricDataSample()
+                    [self.retrievedTime, self.retrievedPrice, endOfList] = self.theCBProController.CBPro_GetNextHistoricDataSample()
                 else:
                     # Interpolate with previous sample value
                     currentTimeStamp = currentTimeStamp + timeStep
@@ -141,11 +142,11 @@ class InputDataHandler(object):
 
             # Set read index at right pos
             startTimeStampRequested = time.time() - (nbHoursFromNow * 3600)
-            setReadPosResult = self.theGDAXControler.GDAX_SetReadIndexFromPos(startTimeStampRequested)
+            setReadPosResult = self.theCBProController.CBPro_SetReadIndexFromPos(startTimeStampRequested)
 
             if setReadPosResult is True:
                 # Clear graph data and enable continuous graph update
-                self.theMarketData.MRKT_ResetAllData(self.theGDAXControler.GDAX_GetHistoricDataSubSchedulingFactor())
+                self.theMarketData.MRKT_ResetAllData(self.theCBProController.CBPro_GetHistoricDataSubSchedulingFactor())
                 self.theUIGraph.UIGR_ResetAllGraphData(True, startTimeStampRequested, theConfig.CONFIG_NB_POINTS_SIMU_GRAPH)  # Last arg is the nb of points on simulation graph
                 self.theUIGraph.UIGR_StartContinuousGraphRefresh(25)
                 # Prepare trader
@@ -167,7 +168,7 @@ class InputDataHandler(object):
         batchSamplesInitGraph = theConfig.CONFIG_NB_POINTS_INIT_SIMU_GRAPH * self.getCurrentSubSchedulingFactor()
         nbHistoricSamplesRetrieved = 0
         # noinspection PyUnusedLocal
-        [self.retrievedTime, self.retrievedPrice, endOfList] = self.theGDAXControler.GDAX_GetNextHistoricDataSample()
+        [self.retrievedTime, self.retrievedPrice, endOfList] = self.theCBProController.CBPro_GetNextHistoricDataSample()
         currentTimeStamp = self.retrievedTime
         endOfList = False
         timeStep = theConfig.CONFIG_TIME_BETWEEN_RETRIEVED_SAMPLES_IN_MS / 1000
@@ -181,7 +182,7 @@ class InputDataHandler(object):
                 self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
                 currentTimeStamp = self.retrievedTime
                 # Get next sample in memory
-                [self.retrievedTime, self.retrievedPrice, endOfList] = self.theGDAXControler.GDAX_GetNextHistoricDataSample()
+                [self.retrievedTime, self.retrievedPrice, endOfList] = self.theCBProController.CBPro_GetNextHistoricDataSample()
             else:
                 # Interpolate with previous sample value
                 currentTimeStamp = currentTimeStamp + timeStep
@@ -272,7 +273,7 @@ class InputDataHandler(object):
         while self.liveTradingStopIsRequested is False:
 
             # Retrieve next live sample
-            self.retrievedPrice = self.theGDAXControler.GDAX_GetRealTimePriceInEUR()
+            self.retrievedPrice = self.theCBProController.CBPro_GetRealTimePriceInEUR()
             self.retrievedTime = time.time()
 
             self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
@@ -295,7 +296,7 @@ class InputDataHandler(object):
         return self.marketPhase  # TODO: This isn't defined
 
     def getCurrentSpotPrice(self):
-        return self.theGDAXControler.GDAX_GetRealTimePriceInEUR()
+        return self.theCBProController.CBPro_GetRealTimePriceInEUR()
 
     def getCurrentSubSchedulingFactor(self):
         return self.currentSubSchedulingFactor

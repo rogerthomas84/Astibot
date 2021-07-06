@@ -14,7 +14,7 @@ import os
 from Settings import Settings
 from MarketData import MarketData
 from InputDataHandler import InputDataHandler
-from GDAXControler import GDAXControler
+from CBProController import CBProController
 from TransactionManager import TransactionManager
 from Trader import Trader
 from UIGraph import UIGraph
@@ -47,13 +47,13 @@ class TradingBot(object):
         # Instantiate objects
         self.theSettings = Settings()
         self.theUIGraph = UIGraph(self.app, self.theSettings)
-        self.theGDAXControler = GDAXControler(self.theUIGraph, self.theSettings)
-        self.theMarketData = MarketData(self.theGDAXControler, self.theUIGraph)
-        self.theTransactionManager = TransactionManager(self.theGDAXControler, self.theUIGraph, self.theMarketData, self.theSettings)
+        self.theCBProController = CBProController(self.theUIGraph, self.theSettings)
+        self.theMarketData = MarketData(self.theCBProController, self.theUIGraph)
+        self.theTransactionManager = TransactionManager(self.theCBProController, self.theUIGraph, self.theMarketData, self.theSettings)
         self.theUIGraph.UIGR_SetTransactionManager(self.theTransactionManager)
         self.theTrader = Trader(self.theTransactionManager, self.theMarketData, self.theUIGraph, self.theSettings)
-        self.theInputDataHandler = InputDataHandler(self.theGDAXControler, self.theUIGraph, self.theMarketData, self.theTrader, self.theSettings)
-        self.theApp = AppState(self.theUIGraph, self.theTrader, self.theGDAXControler, self.theInputDataHandler, self.theMarketData, self.theSettings)
+        self.theInputDataHandler = InputDataHandler(self.theCBProController, self.theUIGraph, self.theMarketData, self.theTrader, self.theSettings)
+        self.theApp = AppState(self.theUIGraph, self.theTrader, self.theCBProController, self.theInputDataHandler, self.theMarketData, self.theSettings)
 
         # Setup Main Tick Timer
         self.mainTimer = pg.QtCore.QTimer()
@@ -67,7 +67,7 @@ class TradingBot(object):
         self.app.exec_()
 
         # App closing
-        self.theGDAXControler.GDAX_closeBackgroundOperations()
+        self.theCBProController.CBPro_closeBackgroundOperations()
         self.theInputDataHandler.INDH_closeBackgroundOperations()
         self.theUIGraph.UIGR_closeBackgroundOperations()
 

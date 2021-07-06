@@ -1,4 +1,4 @@
-class GDAXCurrencies:
+class CBProCurrencies:
 
     @staticmethod
     def get_all_pairs():
@@ -20,7 +20,7 @@ class GDAXCurrencies:
 
     @staticmethod
     def get_currencies_list():
-        pairs = GDAXCurrencies.get_all_pairs()
+        pairs = CBProCurrencies.get_all_pairs()
         currency_map = []
         for pair in pairs:
             pieces = pair.split('-')
@@ -34,4 +34,4 @@ class GDAXCurrencies:
 
     @staticmethod
     def get_index_for_currency_pair(pair):
-        return GDAXCurrencies.get_all_pairs().index(pair)
+        return CBProCurrencies.get_all_pairs().index(pair)

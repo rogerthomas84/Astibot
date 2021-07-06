@@ -4,7 +4,7 @@ from datetime import datetime
 import threading
 
 # noinspection PyUnresolvedReferences
-from GDAXControler import GDAXControler
+from CBProController import CBProController
 # noinspection PyUnresolvedReferences
 from UIGraph import UIGraph
 import TradingBotConfig as theConfig
@@ -14,8 +14,8 @@ import Notifier as theNotifier
 # noinspection PyPep8Naming,PyAttributeOutsideInit,SpellCheckingInspection,PyShadowingNames
 class TransactionManager(object):
 
-    def __init__(self, GDAXControler, UIGraph, MarketData, Settings):
-        self.theGDAXControler = GDAXControler
+    def __init__(self, CBProController, UIGraph, MarketData, Settings):
+        self.theCBProController = CBProController
         self.theUIGraph = UIGraph
         self.theMarketData = MarketData
         # Application settings data instance
@@ -84,14 +84,14 @@ class TransactionManager(object):
             self.theUIGraph.UIGR_updateAccountsBalance(self.FIATAccountBalanceSimulated, self.cryptoAccountBalanceSimulated)
             self.theUIGraph.UIGR_updateTotalProfit(self.realProfit, self.theoricalProfit, self.percentageProfit, True)
         else:
-            self.initialFiatAccountBalance = self.theGDAXControler.GDAX_GetFiatAccountBalance()
+            self.initialFiatAccountBalance = self.theCBProController.CBPro_GetFiatAccountBalance()
             print("TRNM - Initial fiat balance is %s" % self.initialFiatAccountBalance)
             self.FIATAccountBalanceSimulated = 0
             self.cryptoAccountBalanceSimulated = 0
             self.initialInvestedFiatAmount = float(self.theSettings.SETT_GetSettings()["investPercentage"]) * 0.01 * self.initialFiatAccountBalance
             self.theUIGraph.UIGR_updateTotalProfit(self.realProfit, self.theoricalProfit, self.percentageProfit, False)
-            self.theGDAXControler.GDAX_RefreshAccountsDisplayOnly()
-            self.theGDAXControler.GDAX_RequestAccountsBalancesUpdate()
+            self.theCBProController.CBPro_RefreshAccountsDisplayOnly()
+            self.theCBProController.CBPro_RequestAccountsBalancesUpdate()
 
         if startSession is True:
             self.theUIGraph.UIGR_updateInfoText("Waiting for next buy opportunity", False)
@@ -112,18 +112,18 @@ class TransactionManager(object):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False:
             pass
         else:
-            # In real trading mode let GDAX controler update the accounts labels. TRNM will manage
+            # In real trading mode let CBPro controler update the accounts labels. TRNM will manage
             # money / refresh itself when initiating the new trading session
-            self.theGDAXControler.GDAX_CancelOngoingLimitOrder()
+            self.theCBProController.CBPro_CancelOngoingLimitOrder()
 
     def TRNM_getCryptoBalance(self):
-        return self.theGDAXControler.GDAX_GetCryptoAccountBalance()
+        return self.theCBProController.CBPro_GetCryptoAccountBalance()
 
     def TRNM_ForceAccountsUpdate(self):
-        self.theGDAXControler.GDAX_RequestAccountsBalancesUpdate()
+        self.theCBProController.CBPro_RequestAccountsBalancesUpdate()
 
     def TRNM_getBTCBalance(self):
-        return self.theGDAXControler.GDAX_GetBTCAccountBalance()
+        return self.theCBProController.CBPro_GetBTCAccountBalance()
 
     def TRNM_StartBuyOrSellAttempt(self, buyOrSell, MinMaxPrice):
 
@@ -180,11 +180,11 @@ class TransactionManager(object):
         accountBalanceHeld = 0.0
 
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
-            self.FiatAccountBalance = self.theGDAXControler.GDAX_GetFiatAccountBalance()
+            self.FiatAccountBalance = self.theCBProController.CBPro_GetFiatAccountBalance()
             if includeHeldBalance:
-                accountBalanceHeld = self.theGDAXControler.GDAX_GetFiatAccountBalanceHeld()
+                accountBalanceHeld = self.theCBProController.CBPro_GetFiatAccountBalanceHeld()
                 self.FiatAccountBalance += accountBalanceHeld
-            currentPriceInFiat = self.theGDAXControler.GDAX_GetRealTimePriceInEUR()
+            currentPriceInFiat = self.theCBProController.CBPro_GetRealTimePriceInEUR()
             buyCapabilityInCrypto = float(self.FiatAccountBalance) / float(currentPriceInFiat)
             print("TRNM - computeBuyCapabilityInCrypto: capability is %s (current balance is %s + %s (hold))" % (buyCapabilityInCrypto, self.FiatAccountBalance, accountBalanceHeld))
         else:
@@ -205,15 +205,15 @@ class TransactionManager(object):
         return [profitEstimation, SellPriceWithFeeInFiat]
 
     def TRNM_BuyNow(self):
-        if (self.theGDAXControler.GDAX_IsConnectedAndOperational() == "True") or (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False):
+        if (self.theCBProController.CBPro_IsConnectedAndOperational() == "True") or (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False):
             if self.currentBuyAmountInCryptoWithoutFee == 0:  # Security : no telesopic buys
                 bOrderIsSuccessful = False
                 # noinspection PyUnusedLocal
                 bAmountIsAboveMinimumRequested = False
 
                 # Refresh account balances =======================================================================
-                self.FiatAccountBalance = self.theGDAXControler.GDAX_GetFiatAccountBalance()
-                self.CryptoAccountBalance = self.theGDAXControler.GDAX_GetCryptoAccountBalance()
+                self.FiatAccountBalance = self.theCBProController.CBPro_GetFiatAccountBalance()
+                self.CryptoAccountBalance = self.theCBProController.CBPro_GetCryptoAccountBalance()
 
                 # Compute capability  ============================================================================
                 BuyCapabilityInCrypto = self.computeBuyCapabilityInCrypto(False)
@@ -221,7 +221,7 @@ class TransactionManager(object):
 
                 # Compute and fill Buy data ======================================================================
                 if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
-                    self.currentBuyInitialPriceInEUR = self.theGDAXControler.GDAX_GetRealTimePriceInEUR()
+                    self.currentBuyInitialPriceInEUR = self.theCBProController.CBPro_GetRealTimePriceInEUR()
                 else:
                     self.currentBuyInitialPriceInEUR = self.theMarketData.MRKT_GetLastRefPrice()
                 ratioOfCryptoCapabilityToBuy = float(self.theSettings.SETT_GetSettings()["investPercentage"]) * 0.01
@@ -230,12 +230,12 @@ class TransactionManager(object):
 
                 # Perform transaction  ===========================================================================
                 print("TRNM - Buy Now, amount is: %s Crypto" % self.currentBuyAmountInCryptoWithoutFee)
-                bAmountIsAboveMinimumRequested = self.theGDAXControler.GDAX_IsAmountToBuyAboveMinimum(self.currentBuyAmountInCryptoWithoutFee)
+                bAmountIsAboveMinimumRequested = self.theCBProController.CBPro_IsAmountToBuyAboveMinimum(self.currentBuyAmountInCryptoWithoutFee)
                 print("TRNM - Amount to buy is above minimum possible ? %s" % bAmountIsAboveMinimumRequested)
                 if bAmountIsAboveMinimumRequested is True:
                     if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                         # Real market: Send the Buy order
-                        bOrderIsSuccessful = self.theGDAXControler.GDAX_SendBuyOrder(self.currentBuyAmountInCryptoWithoutFee)
+                        bOrderIsSuccessful = self.theCBProController.CBPro_SendBuyOrder(self.currentBuyAmountInCryptoWithoutFee)
                     else:
                         # Simulation: Compute new simulated balances
                         self.FIATAccountBalanceSimulated = self.FIATAccountBalanceSimulated - (self.FIATAccountBalanceSimulated * ratioOfCryptoCapabilityToBuy)
@@ -266,25 +266,25 @@ class TransactionManager(object):
                 print("TRNM - Trying to buy but there's already a pending buy. Aborted.")
                 return False
         else:
-            print("TRNM - Trying to buy but GDAX Controler not operational. Aborted.")
+            print("TRNM - Trying to buy but CBPro Controler not operational. Aborted.")
             return False
 
     def TRNM_SellNow(self, isStopLossSell):
-        if (self.theGDAXControler.GDAX_IsConnectedAndOperational() == "True") or (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False):
+        if (self.theCBProController.CBPro_IsConnectedAndOperational() == "True") or (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False):
             if self.currentBuyAmountInCryptoWithoutFee >= theConfig.MIN_CRYPTO_AMOUNT_REQUESTED_TO_SELL:
                 bOrderIsSuccessful = False
 
                 # Refresh account balances =================================================================================
-                self.FiatAccountBalance = self.theGDAXControler.GDAX_GetFiatAccountBalance()
-                self.CryptoAccountBalance = self.theGDAXControler.GDAX_GetCryptoAccountBalance()
+                self.FiatAccountBalance = self.theCBProController.CBPro_GetFiatAccountBalance()
+                self.CryptoAccountBalance = self.theCBProController.CBPro_GetCryptoAccountBalance()
 
                 print("TRNM - Sell Now (fiat balance is %s, crypto balance is %s)" % (self.FiatAccountBalance, self.CryptoAccountBalance))
 
                 # Send the Sell order ======================================================================================
                 if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                     # Subtract quantum so that it compensate up roundings when retrieving balance that could be greater than actual crypto balance and cause an insufficient funds sell error
-                    bOrderIsSuccessful = self.theGDAXControler.GDAX_SendSellOrder(self.CryptoAccountBalance - theConfig.CONFIG_CRYPTO_PRICE_QUANTUM)
-                    self.averageSellPriceInFiat = self.theGDAXControler.GDAX_GetRealTimePriceInEUR()
+                    bOrderIsSuccessful = self.theCBProController.CBPro_SendSellOrder(self.CryptoAccountBalance - theConfig.CONFIG_CRYPTO_PRICE_QUANTUM)
+                    self.averageSellPriceInFiat = self.theCBProController.CBPro_GetRealTimePriceInEUR()
                 else:
                     self.averageSellPriceInFiat = self.theMarketData.MRKT_GetLastRefPrice()
 
@@ -293,7 +293,7 @@ class TransactionManager(object):
 
                 # If in simulation, simulate the sell amount of money going back to the FIAT account =======================
                 if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False:
-                    #                                    FIAT balance already present      sell value (with GDAX fee) -> money that goes back into fiat
+                    #                                    FIAT balance already present      sell value (with CBPro fee) -> money that goes back into fiat
                     self.FIATAccountBalanceSimulated = self.FIATAccountBalanceSimulated + sellPriceWithFeeInFiat
                     self.cryptoAccountBalanceSimulated = 0
                     self.theUIGraph.UIGR_updateAccountsBalance(round(self.FIATAccountBalanceSimulated, 5), round(self.cryptoAccountBalanceSimulated, 5))
@@ -307,7 +307,7 @@ class TransactionManager(object):
                     self.theoricalProfit = self.theoricalProfit + profitEstimationInFiat
 
                     if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
-                        currentMidMarketPrice = self.theGDAXControler.GDAX_GetRealTimePriceInEUR()
+                        currentMidMarketPrice = self.theCBProController.CBPro_GetRealTimePriceInEUR()
                     else:
                         currentMidMarketPrice = self.theMarketData.MRKT_GetLastRefPrice()
 
@@ -328,7 +328,7 @@ class TransactionManager(object):
                 print("TRNM - Trying to sell but no more BTC on the account. Aborted")
                 return False
         else:
-            print("TRNM - Trying to buy but GDAX Controler not operational. Aborted.")
+            print("TRNM - Trying to buy but CBPro Controler not operational. Aborted.")
             return False
 
     def TRNM_WithdrawBTC(self, destinationAddress, amountToWithdrawInBTC):
@@ -336,7 +336,7 @@ class TransactionManager(object):
 
         # Check if balance is OK
         if float(self.TRNM_getBTCBalance()) >= amountToWithdrawInBTC:
-            withdrawRequestReturn = self.theGDAXControler.GDAX_WithdrawBTC(destinationAddress, amountToWithdrawInBTC)
+            withdrawRequestReturn = self.theCBProController.CBPro_WithdrawBTC(destinationAddress, amountToWithdrawInBTC)
             if withdrawRequestReturn != "Error":
                 print("TRNM - Withdraw BTC: No error")
                 return withdrawRequestReturn
@@ -369,9 +369,9 @@ class TransactionManager(object):
 
         # Real calculation is only applicable on real market
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
-            # Sleep before fetching account balance (let time to GDAXControler to retrieve the new balances)
+            # Sleep before fetching account balance (let time to CBProController to retrieve the new balances)
             time.sleep(0.5)
-            self.FiatAccountBalance = self.theGDAXControler.GDAX_GetFiatAccountBalance()
+            self.FiatAccountBalance = self.theCBProController.CBPro_GetFiatAccountBalance()
             # Update real profit only if nothing is spent in BTC
             if self.currentBuyAmountInCryptoWithoutFee < theConfig.CONFIG_CRYPTO_PRICE_QUANTUM:
                 print("TRNM - Nothing spent in Crypto, profit update  to %s - initial was %s" % (self.FiatAccountBalance, self.initialFiatAccountBalance))
@@ -382,7 +382,7 @@ class TransactionManager(object):
             else:
                 print("TRNM - RefreshAccountBalancesAndProfit : currentBuyAmountInCryptoWithoutFee greater than quantum: don't update profit. currentBuyAmountInCryptoWithoutFee is %s" % self.currentBuyAmountInCryptoWithoutFee)
 
-            self.CryptoAccountBalance = self.theGDAXControler.GDAX_GetCryptoAccountBalance()
+            self.CryptoAccountBalance = self.theCBProController.CBPro_GetCryptoAccountBalance()
             self.theUIGraph.UIGR_updateTotalProfit(round(self.realProfit, 7), round(self.theoricalProfit, 7), round(self.percentageProfit, 1), False)
         else:
             self.percentageProfit = ((self.theoricalProfit + self.initialInvestedFiatAmount) / self.initialInvestedFiatAmount - 1) * 100
@@ -438,7 +438,7 @@ class TransactionManager(object):
 
         self.threadOrderPlacingLock.acquire()
 
-        self.theGDAXControler.GDAX_CancelOngoingLimitOrder()
+        self.theCBProController.CBPro_CancelOngoingLimitOrder()
 
         self.isOrderPlacingActive = False
         self.orderPlacingCurrentPriceInFiat = 0
@@ -451,10 +451,10 @@ class TransactionManager(object):
 
     def threadOrderPlacing(self):
         while self.isRunning is True:
-            if self.theGDAXControler.GDAX_IsConnectedAndOperational() == "True":
+            if self.theCBProController.CBPro_IsConnectedAndOperational() == "True":
                 if self.isOrderPlacingActive is True:
-                    liveBestBidPrice = self.theGDAXControler.GDAX_GetLiveBestBidPrice()
-                    liveBestAskPrice = self.theGDAXControler.GDAX_GetLiveBestAskPrice()
+                    liveBestBidPrice = self.theCBProController.CBPro_GetLiveBestBidPrice()
+                    liveBestAskPrice = self.theCBProController.CBPro_GetLiveBestAskPrice()
 
                     isOrderFilled = False
                     isReplaceOrderNeeded = False
@@ -463,19 +463,19 @@ class TransactionManager(object):
 
                     # Already an order placed ? Evaluate if not filled and still on the best bid / ask position
                     if self.orderPlacingCurrentPriceInFiat > 0:
-                        if self.theGDAXControler.GDAX_GetCurrentLimitOrderState() == "FILLED":  # ORDER IS TOTALLY FILLED
+                        if self.theCBProController.CBPro_GetCurrentLimitOrderState() == "FILLED":  # ORDER IS TOTALLY FILLED
                             print("TRNM - threadOrderPlacing: Order totally filled part1, request account balances update")
-                            self.theGDAXControler.GDAX_RequestAccountsBalancesUpdate()
+                            self.theCBProController.CBPro_RequestAccountsBalancesUpdate()
                             if self.orderPlacingType == "BUY":
                                 # Set / Refresh buy data
-                                self.currentBuyAmountInCryptoWithoutFee = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
+                                self.currentBuyAmountInCryptoWithoutFee = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
                                 self.currentBuyAmountInCryptoWithFee = self.currentBuyAmountInCryptoWithoutFee
-                                self.currentBuyInitialPriceInEUR = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
+                                self.currentBuyInitialPriceInEUR = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
                                 self.isOrderPlacingActive = False  # Set to false before display
                                 self.performBuyDisplayActions(True)
                             elif self.orderPlacingType == "SELL":
-                                self.currentSoldAmountInCryptoViaLimitOrder = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
-                                self.averageSellPriceInFiat = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
+                                self.currentSoldAmountInCryptoViaLimitOrder = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
+                                self.averageSellPriceInFiat = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
                                 profitEstimationInFiat = self.computeProfitEstimation(True, self.currentSoldAmountInCryptoViaLimitOrder)[0]
                                 self.isOrderPlacingActive = False  # Set to false before display
                                 self.performSellDisplayActions(True, False, liveBestAskPrice, profitEstimationInFiat)
@@ -488,36 +488,36 @@ class TransactionManager(object):
                             self.orderPlacingState = 'FILLED'
                             isOrderFilled = True
                             print("TRNM - threadOrderPlacing: Order totally filled part2, order placing process closed")
-                        elif self.theGDAXControler.GDAX_GetCurrentLimitOrderState() == "MATCHED":  # Order has been partially (or totally filled). In case of totally filled, it will also enter the FILLED branch
+                        elif self.theCBProController.CBPro_GetCurrentLimitOrderState() == "MATCHED":  # Order has been partially (or totally filled). In case of totally filled, it will also enter the FILLED branch
                             # Set / Refresh buy data
                             if self.orderPlacingType == "BUY":
                                 # If there's been a new match since last iteration (or it's the first match)
-                                if self.currentBuyAmountInCryptoWithoutFee != self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]:
-                                    self.currentBuyAmountInCryptoWithoutFee = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
+                                if self.currentBuyAmountInCryptoWithoutFee != self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]:
+                                    self.currentBuyAmountInCryptoWithoutFee = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
                                     self.currentBuyAmountInCryptoWithFee = self.currentBuyAmountInCryptoWithoutFee
-                                    self.currentBuyInitialPriceInEUR = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
+                                    self.currentBuyInitialPriceInEUR = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
                                     self.performBuyDisplayActions(True)
                                     self.orderPlacingState = 'MATCHED'
                                 else:
                                     pass  # Same quantity matched since previous iteration, do nothing
                             elif self.orderPlacingType == "SELL":
                                 # If there's been a new match since last iteration (or it's the first match)
-                                if self.currentSoldAmountInCryptoViaLimitOrder != self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]:
+                                if self.currentSoldAmountInCryptoViaLimitOrder != self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]:
                                     # If there's been a new match since last iteration
-                                    self.currentSoldAmountInCryptoViaLimitOrder = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
-                                    self.averageSellPriceInFiat = self.theGDAXControler.GDAX_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
+                                    self.currentSoldAmountInCryptoViaLimitOrder = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[1]
+                                    self.averageSellPriceInFiat = self.theCBProController.CBPro_GetAveragePriceInFiatAndSizeFilledInCrypto()[0]
                                     profitEstimationInFiat = self.computeProfitEstimation(True, self.currentSoldAmountInCryptoViaLimitOrder)[0]
                                     self.performSellDisplayActions(True, False, liveBestAskPrice, profitEstimationInFiat)
                                     self.orderPlacingState = 'MATCHED'
                                 else:
                                     pass  # Same quantity matched since previous iteration, do nothing
-                        elif self.theGDAXControler.GDAX_GetCurrentLimitOrderState() == "NONE":  # Order does not exist anymore due to any reason (canceled?)
+                        elif self.theCBProController.CBPro_GetCurrentLimitOrderState() == "NONE":  # Order does not exist anymore due to any reason (canceled?)
                             self.isOrderPlacingActive = False
                             self.orderPlacingCurrentPriceInFiat = 0
                             self.orderPlacingType = "NONE"
                             self.orderPlacingState = 'NONE'
                             print("TRNM - Order does not exist anymore (canceled?)")
-                        elif self.theGDAXControler.GDAX_GetCurrentLimitOrderState() == "SUBMITTED":
+                        elif self.theCBProController.CBPro_GetCurrentLimitOrderState() == "SUBMITTED":
                             print("TRNM - threadOrderPlacing: Order submitted. Do nothing and wait for open state")
                         else:
                             # Order still opened: check if it's still at the right price
@@ -559,10 +559,10 @@ class TransactionManager(object):
                                 if liveBestBidPrice < self.orderPlacingMinMaxPrice:
                                     self.orderPlacingCurrentPriceInFiat = liveBestBidPrice
                                     print("TRNM - threadOrderPlacing: BUY - LiveBestBidPrice = %s, ask=%s" % (liveBestBidPrice, liveBestAskPrice))
-                                    statusIsOk = self.theGDAXControler.GDAX_PlaceLimitBuyOrder(buyCapabilityInCrypto * ratioOfCryptoCapabilityToBuy, self.orderPlacingCurrentPriceInFiat)
+                                    statusIsOk = self.theCBProController.CBPro_PlaceLimitBuyOrder(buyCapabilityInCrypto * ratioOfCryptoCapabilityToBuy, self.orderPlacingCurrentPriceInFiat)
                                 elif self.currentBuyInitialPriceInEUR == 0:  # Order book buy price too high: cancel order only if it has not matched
                                     print("TRNM - threadOrderPlacing: live best bid price too high: cancel order")
-                                    self.theGDAXControler.GDAX_CancelOngoingLimitOrder()
+                                    self.theCBProController.CBPro_CancelOngoingLimitOrder()
                                     # live best bid too high: cancel order
                                     self.isOrderPlacingActive = False
                                     self.orderPlacingCurrentPriceInFiat = 0
@@ -570,18 +570,18 @@ class TransactionManager(object):
                                     self.orderPlacingState = 'NONE'
                             elif self.orderPlacingType == "SELL":
                                 print("TRNM - threadOrderPlacing: Placing / Replacing a Sell limit order on the top of the order book")
-                                sellAmountInCrypto = self.theGDAXControler.GDAX_GetCryptoAccountBalance() + self.theGDAXControler.GDAX_GetCryptoAccountBalanceHeld() - theConfig.CONFIG_CRYPTO_PRICE_QUANTUM
+                                sellAmountInCrypto = self.theCBProController.CBPro_GetCryptoAccountBalance() + self.theCBProController.CBPro_GetCryptoAccountBalanceHeld() - theConfig.CONFIG_CRYPTO_PRICE_QUANTUM
                                 # Check if sell price is not too high
                                 if liveBestAskPrice > self.orderPlacingMinMaxPrice:
                                     self.orderPlacingCurrentPriceInFiat = liveBestAskPrice
                                     print("TRNM - threadOrderPlacing: SELL - LiveBestBidPrice = %s, ask=%s" % (liveBestBidPrice, liveBestAskPrice))
-                                    statusIsOk = self.theGDAXControler.GDAX_PlaceLimitSellOrder(sellAmountInCrypto, self.orderPlacingCurrentPriceInFiat)
+                                    statusIsOk = self.theCBProController.CBPro_PlaceLimitSellOrder(sellAmountInCrypto, self.orderPlacingCurrentPriceInFiat)
                                 else:
                                     # Current live sell price is below the min requested sell price (we want to sell higher)
                                     # Do not cancel order: needs to be sold. Can be an order requested by sellTrigger.
                                     # If not placed yet, put order on the min requested price
                                     self.orderPlacingCurrentPriceInFiat = self.orderPlacingMinMaxPrice
-                                    statusIsOk = self.theGDAXControler.GDAX_PlaceLimitSellOrder(sellAmountInCrypto, self.orderPlacingMinMaxPrice)
+                                    statusIsOk = self.theCBProController.CBPro_PlaceLimitSellOrder(sellAmountInCrypto, self.orderPlacingMinMaxPrice)
                             else:
                                 print("TRNM - threadOrderPlacing: Incorrect order placing type: %s" % self.orderPlacingType)
 
@@ -677,7 +677,7 @@ class TransactionManager(object):
         [profitEstimationInFiat, sellPriceWithFeeInFiat] = self.computeProfitEstimation(True, self.currentBuyAmountInCryptoWithFee)
 
         # Simulate the sell amount of money going back to the FIAT account =======================
-        # FIAT balance already present sell value (with GDAX fee) -> money that goes back into fiat
+        # FIAT balance already present sell value (with CBPro fee) -> money that goes back into fiat
         self.FIATAccountBalanceSimulated = self.FIATAccountBalanceSimulated + sellPriceWithFeeInFiat
         self.cryptoAccountBalanceSimulated = 0
         self.theUIGraph.UIGR_updateAccountsBalance(round(self.FIATAccountBalanceSimulated, 5), round(self.cryptoAccountBalanceSimulated, 5))

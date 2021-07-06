@@ -1,7 +1,7 @@
 # noinspection PyUnresolvedReferences
 from MarketData import MarketData
 # noinspection PyUnresolvedReferences
-from GDAXControler import GDAXControler
+from CBProController import CBProController
 # noinspection PyUnresolvedReferences
 from TransactionManager import TransactionManager
 # noinspection PyUnresolvedReferences
@@ -17,10 +17,10 @@ class AppState(object):
     currentAppState = "STATE_INITIALIZATION"
     nextAppState = "STATE_INITIALIZATION"
 
-    def __init__(self, UIGraph, Trader, GDAXControler, InputDataHandler, MarketData, Settings):
+    def __init__(self, UIGraph, Trader, CBProController, InputDataHandler, MarketData, Settings):
         self.theUIGraph = UIGraph
         self.theTrader = Trader
-        self.theGDAXControler = GDAXControler
+        self.theCBProController = CBProController
         self.theInputDataHandler = InputDataHandler
         self.theMarketData = MarketData
         # Application settings data instance
@@ -77,14 +77,14 @@ class AppState(object):
         self.theUIGraph.UIGR_SetSettingsButtonsEnabled(False)
         self.theUIGraph.UIGR_SetDonationButtonsEnabled(False)
 
-        self.theGDAXControler.GDAX_InitializeGDAXConnection()
+        self.theCBProController.CBPro_InitializeCBProConnection()
         self.theUIGraph.UIGR_SetDonationButtonsEnabled(False)
         self.theInputDataHandler.INDH_PrepareHistoricDataSinceGivenHours(True, theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING)
 
     def ManageInitializationState(self):
         self.theUIGraph.UIGR_updateCurrentState("Initializing...", False, True)
 
-        if self.theGDAXControler.GDAX_IsConnectedAndOperational() == "True":
+        if self.theCBProController.CBPro_IsConnectedAndOperational() == "True":
             if self.theInputDataHandler.INDH_GetPreloadHistoricDataStatus() == "Ended":
                 # Initialization to Idle state transition actions
                 self.nextAppState = 'STATE_IDLE'
@@ -94,7 +94,7 @@ class AppState(object):
                 self.theTrader.TRAD_InitiateNewTradingSession(False)  # Force accounts balances display refresh
                 self.theUIGraph.UIGR_SetDonationButtonsEnabled(True)
                 print("APPL - Init: go to idle")
-        elif self.theGDAXControler.GDAX_IsConnectedAndOperational() == "False":
+        elif self.theCBProController.CBPro_IsConnectedAndOperational() == "False":
             self.nextAppState = 'STATE_FAILURE'
             self.theUIGraph.UIGR_SetStartButtonEnabled(False)
             self.theUIGraph.UIGR_SetStartButtonAspect("START_DISABLED")
@@ -125,7 +125,7 @@ class AppState(object):
                 self.nextAppState = 'STATE_SIMULATION_LOADING'
             else:
                 # If Fiat balance is OK
-                if self.theGDAXControler.GDAX_GetFiatAccountBalance() > theConfig.CONFIG_MIN_INITIAL_FIAT_BALANCE_TO_TRADE:
+                if self.theCBProController.CBPro_GetFiatAccountBalance() > theConfig.CONFIG_MIN_INITIAL_FIAT_BALANCE_TO_TRADE:
                     print("APPL - ManageIdleState - StartButtonClicked, fiat balance OK, going to Trading")
                     # Transition to STATE_TRADING_LOADING
                     self.theInputDataHandler.INDH_PrepareHistoricDataSinceGivenHours(True, theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING)
@@ -286,11 +286,11 @@ class AppState(object):
             if bTradingPairHasChanged is True:
                 print("APPL - Trading pair has changed")
                 self.theUIGraph.UIGR_NotifyThatTradingPairHasChanged()
-                self.theGDAXControler.GDAX_NotifyThatTradingPairHasChanged()
+                self.theCBProController.CBPro_NotifyThatTradingPairHasChanged()
 
             if bAPIDataHasChanged is True:
                 print("APPL - API data has changed")
-                pass  # Nothing specific to do as GDAX will be asked to perform a new connection
+                pass  # Nothing specific to do as CBPro will be asked to perform a new connection
 
             # Entry actions for Initialization state
             self.PerformInitializationStateEntryActions()
