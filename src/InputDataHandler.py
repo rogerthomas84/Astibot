@@ -2,12 +2,14 @@ import time
 import threading
 
 import TradingBotConfig as theConfig
+# noinspection PyUnresolvedReferences
 from MarketData import MarketData
+# noinspection PyUnresolvedReferences
 from Trader import Trader
 
 
+# noinspection PyPep8Naming,SpellCheckingInspection,PyShadowingNames,PyAttributeOutsideInit,DuplicatedCode
 class InputDataHandler(object):
-
 
     def __init__(self, GDAXControler, UIGraph, MarketData, Trader, Settings):
 
@@ -34,7 +36,6 @@ class InputDataHandler(object):
             return "Ended"
         else:
             return self.PreloadHistoricDataStatus
-
 
     def PreloadHistoricData(self, displayWholeBufferAtTheEnd, nbHoursToPreload):
         self.nbHoursToPreload = nbHoursToPreload
@@ -78,7 +79,7 @@ class InputDataHandler(object):
 
         # If preloaded data start time is after desired start time with a delta, reloading is necessary OR
         # if preloaded end time is before current time with a delta, reloading is necessary
-        if (self.GetLoadedDataStartTimestamp() > (desiredStartTimeStamp +  theConfig.NB_SECONDS_THRESHOLD_FROM_NOW_FOR_RELOADING_DATA)) or ((self.GetLoadedDataEndTimestamp() + theConfig.NB_SECONDS_THRESHOLD_FROM_NOW_FOR_RELOADING_DATA) < desiredEndTimeStamp):
+        if (self.GetLoadedDataStartTimestamp() > (desiredStartTimeStamp + theConfig.NB_SECONDS_THRESHOLD_FROM_NOW_FOR_RELOADING_DATA)) or ((self.GetLoadedDataEndTimestamp() + theConfig.NB_SECONDS_THRESHOLD_FROM_NOW_FOR_RELOADING_DATA) < desiredEndTimeStamp):
             print("INDH - INDH_PrepareHistoricDataSinceGivenHours : Desired data not present. Loaded start is %s, end is %s. Loading in background thread..." % (self.GetLoadedDataStartTimestamp(), self.GetLoadedDataEndTimestamp()))
             startTimeStampToLoadData = self.initialTimeStampInUserTime - (self.nbHoursToPreload * 3600)
             stopTimeStampToLoadData = self.initialTimeStampInUserTime
@@ -89,8 +90,8 @@ class InputDataHandler(object):
         else:
             print("INDH - No need to preload historic data")
 
-        # Only true for trading where we want to see the historic price d'un coup 
-        if displayWholeBufferAtTheEndArray ==  True:
+        # Only true for trading where we want to see the historic price d'un coup
+        if displayWholeBufferAtTheEndArray is True:
             print("INDH - Thread Load Historic Data: batch MarketData and Graph update. Subscheduling factor is %s" % self.currentSubSchedulingFactor)
 
             self.theMarketData.MRKT_ResetAllData(1)
@@ -102,13 +103,14 @@ class InputDataHandler(object):
             print("INDH - Choosen to display %s points on graph" % nbOfSamplesToDisplayOnGraph)
             self.theUIGraph.UIGR_ResetAllGraphData(False, -1, int(nbOfSamplesToDisplayOnGraph))
 
+            # noinspection PyUnusedLocal
             [self.retrievedTime, self.retrievedPrice, endOfList] = self.theGDAXControler.GDAX_GetNextHistoricDataSample()
             currentTimeStamp = self.retrievedTime
             endOfList = False
             timeStep = theConfig.CONFIG_TIME_BETWEEN_RETRIEVED_SAMPLES_IN_MS / 1000
 
             while (endOfList is False) and (self.abortOperations is False):
-                #print("currentTimestamp %s" % currentTimeStamp)
+                # print("currentTimestamp %s" % currentTimeStamp)
                 if currentTimeStamp >= self.retrievedTime:
                     # Update market data with this original (non artificial) sample
                     self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
@@ -125,7 +127,7 @@ class InputDataHandler(object):
 
         self.PreloadHistoricDataStatus = "Ended"
 
-    # Initiates the simulation thread. 
+    # Initiates the simulation thread.
     def INDH_PerformSimulation(self, nbHoursFromNow):
         # Security : if historic data is still loading, return Ended
         if self.PreloadHistoricDataStatus == "Ongoing":
@@ -164,6 +166,7 @@ class InputDataHandler(object):
         batchSamplesSizeForSpeed = self.theSettings.SETT_GetSettings()["simulationSpeed"] + 2
         batchSamplesInitGraph = theConfig.CONFIG_NB_POINTS_INIT_SIMU_GRAPH * self.getCurrentSubSchedulingFactor()
         nbHistoricSamplesRetrieved = 0
+        # noinspection PyUnusedLocal
         [self.retrievedTime, self.retrievedPrice, endOfList] = self.theGDAXControler.GDAX_GetNextHistoricDataSample()
         currentTimeStamp = self.retrievedTime
         endOfList = False
@@ -172,7 +175,7 @@ class InputDataHandler(object):
         print("INDH - Starting Simulation Thread. Batch size for simulation speed is %s" % batchSamplesSizeForSpeed)
 
         while (endOfList is False) and (self.simulationStopIsRequested is False):
-            #print("currentTimestamp %s" % currentTimeStamp)
+            # print("currentTimestamp %s" % currentTimeStamp)
             if currentTimeStamp >= self.retrievedTime:
                 # Update market data with this original (non artificial) sample
                 self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
@@ -184,9 +187,9 @@ class InputDataHandler(object):
                 currentTimeStamp = currentTimeStamp + timeStep
                 self.theMarketData.MRKT_updateMarketData(currentTimeStamp, self.retrievedPrice)
 
-            #start = time.clock()
-            #self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
-            #print("MRKT_updateMarketData : %s" % (time.clock() - start))
+            # start = time.clock()
+            # self.theMarketData.MRKT_updateMarketData(self.retrievedTime, self.retrievedPrice)
+            # print("MRKT_updateMarketData : %s" % (time.clock() - start))
 
             nbHistoricSamplesRetrieved = nbHistoricSamplesRetrieved + 1
             self.theTrader.TRAD_ProcessDecision()
@@ -194,10 +197,10 @@ class InputDataHandler(object):
             # Pause if UIGR is busy
             if nbHistoricSamplesRetrieved > batchSamplesInitGraph:  # Init graph phase passed
                 if nbHistoricSamplesRetrieved % batchSamplesSizeForSpeed == 0:
-                    #print("UIGR_updateGraphs : %s" % (time.clock() - start))
-                    #print("E")
+                    # print("UIGR_updateGraphs : %s" % (time.clock() - start))
+                    # print("E")
                     while (self.theUIGraph.UIGR_AreNewSamplesRequested() is False) and (self.simulationStopIsRequested is False):
-                        #print("pause")
+                        # print("pause")
                         time.sleep(0.002)
 
             if self.simulationPauseIsRequested is True:
@@ -205,7 +208,7 @@ class InputDataHandler(object):
                     # Simulation is on pause, wait
                     time.sleep(0.05)
 
-        # End of simulation                
+        # End of simulation
         print("INDH - Simulation Thread has ended : Stop ? %s End of buffer ? %s" % (self.simulationStopIsRequested, endOfList))
         self.operationalStatus = "Ended"
 
@@ -233,6 +236,7 @@ class InputDataHandler(object):
         else:
             self.liveTradingStopIsRequested = True
 
+    # noinspection PyUnusedLocal
     def INDH_PerformLiveTradingOperation(self, nbHoursFromNow):
         # Security : if historic data is still loading, return Ended
         if self.PreloadHistoricDataStatus == "Ongoing":
@@ -258,7 +262,6 @@ class InputDataHandler(object):
             # Already initiated, should not happen
             return "Error"
 
-
     def PerformLiveTradingThread(self):
         nbLiveSamplesRetrieved = 0
         waitingCounter = 0
@@ -277,19 +280,19 @@ class InputDataHandler(object):
 
             nbLiveSamplesRetrieved = nbLiveSamplesRetrieved + 1
 
-
             while (self.liveTradingStopIsRequested is False) and (waitingCounter < nbIterationToPassToWaitPeriodTime):
                 time.sleep(timeToWaitInSecGranulaity)
                 waitingCounter = waitingCounter + 1
 
             waitingCounter = 0
 
-        # End of Live Trading        
+        # End of Live Trading
         print("INDH - Live Trading Thread has ended : Stop ? %s" % self.simulationStopIsRequested)
         self.operationalStatus = "Ended"
 
     def INDH_GetCurrentState(self):
-        return self.marketPhase
+        # noinspection PyUnresolvedReferences
+        return self.marketPhase  # TODO: This isn't defined
 
     def getCurrentSpotPrice(self):
         return self.theGDAXControler.GDAX_GetRealTimePriceInEUR()

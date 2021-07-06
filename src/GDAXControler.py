@@ -12,16 +12,17 @@ from requests.exceptions import ConnectionError
 from GDAXCurrencies import GDAXCurrencies
 import math # truncate
 
+
 # This module is actually a Coinbae Pro handler
 # TODO : update all GDAX references to CbPro
+# noinspection PyPep8Naming,PyAttributeOutsideInit,SpellCheckingInspection,DuplicatedCode
 class GDAXControler(cbpro.OrderBook):
-    '''
+    """
     classdocs
-    '''
+    """
     GDAX_MAX_HISTORIC_PRICES_ELEMENTS = 300
     GDAX_HISTORIC_DATA_MIN_GRANULARITY_IN_SEC = 60
     GDAX_HISTORIC_DATA_SUBSCHEDULING_FACTOR = GDAX_HISTORIC_DATA_MIN_GRANULARITY_IN_SEC / (theConfig.CONFIG_TIME_BETWEEN_RETRIEVED_SAMPLES_IN_MS / 1000)
-
 
     def __init__(self, UIGraph, Settings):
 
@@ -43,7 +44,7 @@ class GDAXControler(cbpro.OrderBook):
         self.liveBestAskPrice = 0
         self.midMarketPrice = 0
         self.currentOrderId = 0
-        self.currentOrderState = "NONE" # SUBMITTED / OPENED / FILLED / NONE
+        self.currentOrderState = "NONE"  # SUBMITTED / OPENED / FILLED / NONE
         self.currentOrderInitialSizeInCrypto = 0
         self.currentOrderFilledSizeInCrypto = 0
         self.currentOrderAverageFilledPriceInFiat = 0
@@ -62,7 +63,7 @@ class GDAXControler(cbpro.OrderBook):
 
         self.clientPublic = cbpro.PublicClient()
 
-        # Start background thread        
+        # Start background thread
         threadRefreshPrice = threading.Timer(1, self.updateRealTimePriceInBackground)
         threadRefreshPrice.start()
 
@@ -86,7 +87,7 @@ class GDAXControler(cbpro.OrderBook):
             self.close()
             print("GDAX - Reseting Order book...")
             self.reset_book()
-            # Orderbook class does not reset sequence number when changing product : set it to -1 will force orderbook to refresh 
+            # Orderbook class does not reset sequence number when changing product : set it to -1 will force orderbook to refresh
             # the sequence number and retrieve the last full order book
             self._sequence = -1
 
@@ -96,7 +97,7 @@ class GDAXControler(cbpro.OrderBook):
     def startWebSocketFeed(self):
         self.channels = ['full', 'user']
         self._log_to = False
-        self.auth=True
+        self.auth = True
         self.products = [self.productStr]
         self.start()
 
@@ -115,10 +116,11 @@ class GDAXControler(cbpro.OrderBook):
 
         # Use the sandbox API : https://api-public.sandbox.cbpro.com (requires a different set of API access credentials)
         # Use the true API : https://api.cbpro.com
+        # noinspection PyUnusedLocal
         try:
             self.clientAuth = cbpro.AuthenticatedClient(self.api_key, self.api_secret, self.api_passphrase, api_url="https://api.pro.coinbase.com")
         except ConnectionError as e:
-           print("GDAX - Internet connection error")
+            print("GDAX - Internet connection error")
         except BaseException as e:
             bGDAXConnectionIsOK = False
             bInternetLinkIsOK = False
@@ -126,6 +128,7 @@ class GDAXControler(cbpro.OrderBook):
             print("GDAX - Exception : " + str(e))
 
         # Refresh account in order to see if auth was successful
+        # noinspection PyUnusedLocal
         try:
             self.accounts = self.clientAuth.get_accounts()
             time.sleep(0.05)
@@ -136,9 +139,9 @@ class GDAXControler(cbpro.OrderBook):
                 bGDAXConnectionIsOK = False
                 print("GDAX - Accounts retrieving not successful: no relevant data")
         except ConnectionError as e:
-           print("GDAX - Internet connection error")
-           bGDAXConnectionIsOK = False
-           bInternetLinkIsOK = False
+            print("GDAX - Internet connection error")
+            bGDAXConnectionIsOK = False
+            bInternetLinkIsOK = False
         except BaseException as e:
             bGDAXConnectionIsOK = False
             print("GDAX - Authentication error: not possible to get accounts data")
@@ -203,9 +206,10 @@ class GDAXControler(cbpro.OrderBook):
 
     # Returns the Available fiat balance (ie. money that can be used and that is not held for any pending order)
     def GDAX_GetFiatAccountBalance(self):
-        #print("GDAX - GetFiatAccountBalance")
+        # print("GDAX - GetFiatAccountBalance")
         if self.bFiatAccountExists is True:
-            #print("GDAX - Exists")
+            # print("GDAX - Exists")
+            # noinspection PyBroadException,PyUnusedLocal
             try:
                 balanceToReturn = (round(float(self.FiatAccount['available']), 8))
                 return balanceToReturn
@@ -217,9 +221,10 @@ class GDAXControler(cbpro.OrderBook):
             return 0
 
     def GDAX_GetFiatAccountBalanceHeld(self):
-        #print("GDAX - GetFiatAccountBalance")
+        # print("GDAX - GetFiatAccountBalance")
         if self.bFiatAccountExists is True:
-            #print("GDAX - Exists")
+            # print("GDAX - Exists")
+            # noinspection PyBroadException,PyUnusedLocal
             try:
                 balanceToReturn = (round(float(self.FiatAccount['hold']), 8))
                 return balanceToReturn
@@ -233,6 +238,7 @@ class GDAXControler(cbpro.OrderBook):
     # Returns the Available crypto balance (ie. money that can be used and that is not held for any pending order)
     def GDAX_GetCryptoAccountBalance(self):
         if self.bCryptoAccountExists is True:
+            # noinspection PyBroadException,PyUnusedLocal
             try:
                 balanceToReturn = (round(float(self.CryptoAccount['available']), 8))
                 return balanceToReturn
@@ -245,6 +251,7 @@ class GDAXControler(cbpro.OrderBook):
 
     def GDAX_GetCryptoAccountBalanceHeld(self):
         if self.bCryptoAccountExists is True:
+            # noinspection PyBroadException,PyUnusedLocal
             try:
                 balanceToReturn = (round(float(self.CryptoAccount['hold']), 8))
                 print("GDAX - Returned held balance %s for %s" % (balanceToReturn, self.productCryptoStr))
@@ -259,6 +266,7 @@ class GDAXControler(cbpro.OrderBook):
     # Returns the Available BTC balance (ie. money that can be used and that is not held for any pending order)
     # Useful for payment system
     def GDAX_GetBTCAccountBalance(self):
+        # noinspection PyUnusedLocal,PyBroadException
         try:
             for currentAccount in self.accounts:
                 if currentAccount['currency'] == 'BTC':
@@ -270,46 +278,45 @@ class GDAXControler(cbpro.OrderBook):
             return 0
 
     def refreshAccounts(self):
+        # noinspection PyBroadException,PyUnusedLocal
         try:
             self.accounts = self.clientAuth.get_accounts()
             # Refresh individual accounts
             for currentAccount in self.accounts:
                 if currentAccount['currency'] == self.productCryptoStr:
                     self.CryptoAccount = currentAccount
-                    #print("CRYPTO ACCOUNT")
-                    #print(self.CryptoAccount)
-                    #print(self.CryptoAccount['balance'])
-                    #print(self.CryptoAccount['available'])
+                    # print("CRYPTO ACCOUNT")
+                    # print(self.CryptoAccount)
+                    # print(self.CryptoAccount['balance'])
+                    # print(self.CryptoAccount['available'])
                 if currentAccount['currency'] == self.productFiatStr:
                     self.FiatAccount = currentAccount
-                    #print("FIAT ACCOUNT")
-                    #print(self.FiatAccount)
-                    #print(self.FiatAccount['balance'])
-                    #print(self.FiatAccount['available'])
+                    # print("FIAT ACCOUNT")
+                    # print(self.FiatAccount)
+                    # print(self.FiatAccount['balance'])
+                    # print(self.FiatAccount['available'])
 
             if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
                 self.theUIGraph.UIGR_updateAccountsBalance(self.GDAX_GetFiatAccountBalance(), self.GDAX_GetCryptoAccountBalance())
             else:
-                pass # In simulated market, accounts are refreshed by the Simulation manager
-        except:
+                pass  # In simulated market, accounts are refreshed by the Simulation manager
+        except Exception as e:
             print("GDAX - Error in refreshAccounts")
-
 
     def GDAX_RefreshAccountsDisplayOnly(self):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
             self.theUIGraph.UIGR_updateAccountsBalance(self.GDAX_GetFiatAccountBalance(), self.GDAX_GetCryptoAccountBalance())
         else:
-            pass # TRNM takes care of the price update
+            pass  # TRNM takes care of the price update
 
     # WebSocket callback - On connection opening
     def on_open(self):
         print("GDAX - WebSocket connection opened (callback) on %s" % self.productStr)
-        #self.url = "wss://ws-feed.pro.coinbase.com/"
+        # self.url = "wss://ws-feed.pro.coinbase.com/"
         self.products = [self.productStr]
         self.webSocketIsOpened = True
         self.count = 0
         self.matchOrderProcessedSequenceId = 0
-
 
     def on_message(self, message):
         super(GDAXControler, self).on_message(message)
@@ -354,14 +361,13 @@ class GDAXControler(cbpro.OrderBook):
                         self.matchOrderProcessedSequenceId = message['sequence']
                         self.currentOrderState = "MATCHED"
 
-        # Order book has been updated, retrieve best bid and ask         
+        # Order book has been updated, retrieve best bid and ask
         self.liveBestBidPrice = self.get_bid()
-        #print("Bid %s" % self.liveBestBidPrice)
+        # print("Bid %s" % self.liveBestBidPrice)
         self.liveBestAskPrice = self.get_ask()
-        #print("Ask %s" % self.liveBestAskPrice)
+        # print("Ask %s" % self.liveBestAskPrice)
 
         self.webSocketLock.release()
-
 
     def on_close(self):
         print("GDAX - WebSocket connection closed (callback)")
@@ -416,7 +422,7 @@ class GDAXControler(cbpro.OrderBook):
 #                 print("GDAX - Lowest Ask: %s" % self.tickBestAskPrice)
 
                 self.PriceSpread = self.tickBestBidPrice - self.tickBestAskPrice
-                #print("GDAX - MiddleMarket price: %s" % self.tickBestBidPrice)
+                # print("GDAX - MiddleMarket price: %s" % self.tickBestBidPrice)
 
                 self.theUIGraph.UIGR_updateConnectionText("Price data received from Coinbase Pro server")
 
@@ -431,6 +437,7 @@ class GDAXControler(cbpro.OrderBook):
             except BaseException as e:
                 print("GDAX - Error retrieving level 1 order book or account data")
                 print("GDAX - Exception : " + str(e))
+                # noinspection PyUnboundLocalVariable
                 print(result)
                 self.requestAccountsBalanceUpdate = False
 
@@ -446,7 +453,6 @@ class GDAXControler(cbpro.OrderBook):
                 if self.requestAccountsBalanceUpdate is False:
                     time.sleep(0.1)
 
-
     def GDAX_closeBackgroundOperations(self):
 
         self.isRunning = False
@@ -454,7 +460,6 @@ class GDAXControler(cbpro.OrderBook):
         if self.webSocketIsOpened is True:
             print("GDAX - Closing Websocket...")
             self.close()
-
 
     def GDAX_GetRealTimePriceInEUR(self):
         return self.midMarketPrice
@@ -486,7 +491,6 @@ class GDAXControler(cbpro.OrderBook):
             if self.currentOrderState != "NONE":
                 self.INTERNAL_CancelOngoingLimitOrder()
 
-
             # Send Limit order
             amountToBuyInCrypto = round(amountToBuyInCrypto, 8)
 
@@ -494,18 +498,17 @@ class GDAXControler(cbpro.OrderBook):
             # Prix exprimé en BTC, arrondi variable
             if self.productFiatStr == "BTC":
                 if self.productCryptoStr == "LTC":
-                    buyPriceInFiat = math.floor(buyPriceInFiat*1000000)/1000000 # Floor à 0.000001
+                    buyPriceInFiat = math.floor(buyPriceInFiat*1000000)/1000000  # Floor à 0.000001
                 else:
-                    buyPriceInFiat = math.floor(buyPriceInFiat*100000)/100000 # Floor à 0.00001
+                    buyPriceInFiat = math.floor(buyPriceInFiat*100000)/100000  # Floor à 0.00001
             else:  # Prix exprimé en Fiat, arrondi à 0.01
                 buyPriceInFiat = math.floor(buyPriceInFiat*100)/100
-
 
             buyRequestReturn = self.clientAuth.buy(price=str(buyPriceInFiat), size=str(amountToBuyInCrypto), product_id=self.productStr, order_type='limit', post_only=True)  # with Post Only
             print("GDAX - Actual buy sent with LIMIT order set to %s. Amount is %s Crypto" % (buyPriceInFiat, amountToBuyInCrypto))
             print("GDAX - Limit order placing sent. Request return is: %s" % buyRequestReturn)
             if 'id' in buyRequestReturn:
-                if not 'reject_reason' in buyRequestReturn:
+                if 'reject_reason' not in buyRequestReturn:
                     self.currentOrderId = buyRequestReturn['id']
                     self.currentOrderState = "SUBMITTED"
                     self.currentOrderInitialSizeInCrypto = amountToBuyInCrypto
@@ -536,7 +539,6 @@ class GDAXControler(cbpro.OrderBook):
             self.webSocketLock.release()
             return True
 
-
     def GDAX_PlaceLimitSellOrder(self, amountToSellInCrypto, sellPriceInFiat):
 
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
@@ -550,13 +552,13 @@ class GDAXControler(cbpro.OrderBook):
             # Send Limit order
             amountToSellInCrypto = round(amountToSellInCrypto, 8)
 
-            # Don't use round because order could be placed on the other side of the spread -> rejected            
+            # Don't use round because order could be placed on the other side of the spread -> rejected
             # Prix exprimé en BTC, arrondi variable
             if self.productFiatStr == "BTC":
                 if self.productCryptoStr == "LTC":
-                    sellPriceInFiat = math.floor(sellPriceInFiat*1000000)/1000000 # Floor à 0.000001
+                    sellPriceInFiat = math.floor(sellPriceInFiat*1000000)/1000000  # Floor à 0.000001
                 else:
-                    sellPriceInFiat = math.floor(sellPriceInFiat*100000)/100000 # Floor à 0.00001
+                    sellPriceInFiat = math.floor(sellPriceInFiat*100000)/100000  # Floor à 0.00001
             else:  # Prix exprimé en Fiat, arrondi à 0.01
                 sellPriceInFiat = math.floor(sellPriceInFiat*100)/100
 
@@ -586,12 +588,11 @@ class GDAXControler(cbpro.OrderBook):
             self.webSocketLock.release()
             return True
 
-
     # Include thread safe protection: shall be called from outside
     def GDAX_CancelOngoingLimitOrder(self):
         self.webSocketLock.acquire()
         if self.currentOrderId != 0:
-            self.currentOrderId = 0 # So that websocket won't get the cancel notification
+            self.currentOrderId = 0  # So that websocket won't get the cancel notification
             self.currentOrderState = "NONE"
             self.currentOrderInitialSizeInCrypto = 0
             self.currentOrderFilledSizeInCrypto = 0
@@ -606,7 +607,7 @@ class GDAXControler(cbpro.OrderBook):
     def INTERNAL_CancelOngoingLimitOrder(self):
 
         if self.currentOrderId != 0:
-            self.currentOrderId = 0 # So that websocket won't get the cancel notification
+            self.currentOrderId = 0  # So that websocket won't get the cancel notification
             self.currentOrderState = "NONE"
             self.currentOrderInitialSizeInCrypto = 0
             self.currentOrderFilledSizeInCrypto = 0
@@ -615,7 +616,6 @@ class GDAXControler(cbpro.OrderBook):
             print("GDAX - INTERNAL_CancelOngoingLimitOrder: Ongoing order canceled. Request return is: %s" % cancelAllReturn)
         else:
             print("GDAX - INTERNAL_CancelOngoingLimitOrder: No order to cancel! Just filled?")
-
 
     def GDAX_SendBuyOrder(self, amountToBuyInBTC):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
@@ -638,11 +638,7 @@ class GDAXControler(cbpro.OrderBook):
                 else:
                     print("GDAX - Buy order has been interpreted as failed")
                     return False
-            else:
-                return False
-        else:
-            return False
-
+        return False
 
     def GDAX_SendSellOrder(self, amountToSellInBTC):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
@@ -743,7 +739,7 @@ class GDAXControler(cbpro.OrderBook):
 
         # Progression measurement
         granularityInSec = round(self.GDAX_HISTORIC_DATA_MIN_GRANULARITY_IN_SEC)
-        nbIterationsToRetrieveEverything = ((stopTimestamp - startTimestamp) / (round(self.GDAX_HISTORIC_DATA_MIN_GRANULARITY_IN_SEC))) /  round(self.GDAX_MAX_HISTORIC_PRICES_ELEMENTS)
+        nbIterationsToRetrieveEverything = ((stopTimestamp - startTimestamp) / (round(self.GDAX_HISTORIC_DATA_MIN_GRANULARITY_IN_SEC))) / round(self.GDAX_MAX_HISTORIC_PRICES_ELEMENTS)
         print("GDAX - Nb Max iterations to retrieve everything: %s" % nbIterationsToRetrieveEverything)
         nbLoopIterations = 0
 
@@ -760,29 +756,30 @@ class GDAXControler(cbpro.OrderBook):
             if self.IsConnectedAndOperational == "True":
                 print("GDAX - Using public client to retrieve historic prices")
                 HistoricDataSlice = self.clientAuth.get_product_historic_rates(self.productStr, granularity=granularityInSec, start=startTimestampSliceInISO, end=stopTimestampSliceInISO)
-                # Only sleep if reloop condition is met
+                # Only sleep if re-loop condition is met
                 if stopSlice < stopTimestamp:
                     time.sleep(0.350)
                 print("GDAX - Using private client to retrieve historic prices")
             else:
                 HistoricDataSlice = self.clientPublic.get_product_historic_rates(self.productStr, granularity=granularityInSec, start=startTimestampSliceInISO, end=stopTimestampSliceInISO)
-                # Only sleep if reloop condition is met
+                # Only sleep if re-loop condition is met
                 if stopSlice < stopTimestamp:
                     time.sleep(0.250)
                 print("GDAX - Using public client to retrieve historic prices")
 
             print("GDAX - Size of HistoricDataSlice: %s" % len(HistoricDataSlice))
 
+            # noinspection PyBroadException,SpellCheckingInspection,PyUnusedLocal
             try:  # parfois le reversed crash. Pas de data dans la slice ?
-                for slice in reversed(HistoricDataSlice):
-                    self.HistoricDataRaw.append(slice)
+                for piece in reversed(HistoricDataSlice):
+                    self.HistoricDataRaw.append(piece)
             except BaseException as e:
                 print("GDAX - Exception when reversing historic data slice")
-            #print("Historic : %s " % HistoricDataSlice)
+            # print("Historic : %s " % HistoricDataSlice)
 
-            startSlice = stopSlice # Prepare next iteration
+            startSlice = stopSlice  # Prepare next iteration
 
-            # Progress report 
+            # Progress report
             nbLoopIterations = nbLoopIterations + 1
             percentage = round(nbLoopIterations * 100 / nbIterationsToRetrieveEverything)
             if percentage > 100:
@@ -801,7 +798,7 @@ class GDAXControler(cbpro.OrderBook):
                 currentBrowsedTimestamp = self.HistoricDataRaw[tempIterationIndex][0]
                 self.HistoricData.append(self.HistoricDataRaw[tempIterationIndex])
 
-            #print(self.HistoricData[tempIterationIndex][0])
+            # print(self.HistoricData[tempIterationIndex][0])
             tempIterationIndex = tempIterationIndex + 1
 
 # DEBUG
@@ -810,22 +807,22 @@ class GDAXControler(cbpro.OrderBook):
 #             print(self.HistoricData[tempIterationIndex][0])
 #             tempIterationIndex = tempIterationIndex + 1
 #
-        print ("GDAX - %s Historical samples have been retrieved (after cleaning)" % len(self.HistoricData))
+        print("GDAX - %s Historical samples have been retrieved (after cleaning)" % len(self.HistoricData))
 
     # Returns a price data sample CONFIG_TIME_BETWEEN_RETRIEVED_SAMPLES_IN_MS seconds after the last call
     # even if GDAX historic sample period is longer
     def GDAX_GetNextHistoricDataSample(self):
-        #print("HistoricData : %s " % self.HistoricData)
-        #print("GDAX - Full Historic data list length is %s" % len(self.HistoricData))
+        # print("HistoricData : %s " % self.HistoricData)
+        # print("GDAX - Full Historic data list length is %s" % len(self.HistoricData))
 
         endOfList = False
         self.HistoricDataReadIndex = self.HistoricDataReadIndex + 1
         if self.HistoricDataReadIndex + 1 >= len(self.HistoricData):  # We've read as many samples as they are in the list
             endOfList = True
             print("GDAX - Historic Data - End of list reached")
-#         print ("Time retrieved %s" % self.HistoricData[self.HistoricDataReadIndex][0])
-#         print ("Price retrieved %s" % self.HistoricData[self.HistoricDataReadIndex][4])
-#         print ("Len list %s, Index : %s" % (len(self.HistoricData), self.HistoricDataReadIndex))
+#         print("Time retrieved %s" % self.HistoricData[self.HistoricDataReadIndex][0])
+#         print("Price retrieved %s" % self.HistoricData[self.HistoricDataReadIndex][4])
+#         print("Len list %s, Index : %s" % (len(self.HistoricData), self.HistoricDataReadIndex))
 
         # Fifth element (index 4) is the closure price
         return [self.HistoricData[self.HistoricDataReadIndex][0], self.HistoricData[self.HistoricDataReadIndex][4], endOfList]
@@ -833,8 +830,8 @@ class GDAXControler(cbpro.OrderBook):
     def GDAX_SetReadIndexFromPos(self, positionTimeStamp):
         tempIterationIndex = 0
         bReadIndexFound = False
-        print ("GDAX - SetReadIndexFromPos : %d" % positionTimeStamp)
-        print ("GDAX - Historic data length is %s" % len(self.HistoricData))
+        print("GDAX - SetReadIndexFromPos : %d" % positionTimeStamp)
+        print("GDAX - Historic data length is %s" % len(self.HistoricData))
 
         while (tempIterationIndex < len(self.HistoricData)) and (bReadIndexFound is False):
             if self.HistoricData[tempIterationIndex][0] > positionTimeStamp:
@@ -843,10 +840,10 @@ class GDAXControler(cbpro.OrderBook):
             tempIterationIndex = tempIterationIndex + 1
 
         if bReadIndexFound is True:
-            print ("GDAX - SetReadIndexFromPos : index found: %s" % self.HistoricDataReadIndex)
+            print("GDAX - SetReadIndexFromPos : index found: %s" % self.HistoricDataReadIndex)
             return True
         else:
-            print ("GDAX - SetReadIndexFromPos : index not found")
+            print("GDAX - SetReadIndexFromPos : index not found")
             return False
 
     # Return the number of samples that can be read starting from the current readIndex position, until the end of the buffer
@@ -872,4 +869,3 @@ class GDAXControler(cbpro.OrderBook):
 
     def GDAX_ListAccountWithdrawals(self):
         print(self.clientAuth.get_account_history(self.CryptoAccount['id']))
-

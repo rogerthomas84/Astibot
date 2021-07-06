@@ -3,11 +3,15 @@ from datetime import datetime
 
 import threading
 
+# noinspection PyUnresolvedReferences
+from GDAXControler import GDAXControler
+# noinspection PyUnresolvedReferences
+from UIGraph import UIGraph
 import TradingBotConfig as theConfig
 import Notifier as theNotifier
 
 
-# noinspection PyPep8Naming,PyAttributeOutsideInit,SpellCheckingInspection
+# noinspection PyPep8Naming,PyAttributeOutsideInit,SpellCheckingInspection,PyShadowingNames
 class TransactionManager(object):
 
     def __init__(self, GDAXControler, UIGraph, MarketData, Settings):

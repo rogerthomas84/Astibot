@@ -1,12 +1,16 @@
 from scipy import signal
 import numpy as np
+# noinspection PyUnresolvedReferences
 import time
+# noinspection PyUnresolvedReferences
 import math
 
+# noinspection PyUnresolvedReferences
 import TradingBotConfig as theConfig
 
-class MarketData:
 
+# noinspection PyPep8Naming,SpellCheckingInspection,PyAttributeOutsideInit,DuplicatedCode
+class MarketData:
 
     MAX_HISTORIC_SAMPLES = 20000
     NB_POINTS_FOR_FAST_SMOOTH_FILTER = 600
@@ -19,7 +23,6 @@ class MarketData:
     maxMACDValuePricePercentageForNormalization = 60
 
     NB_POINTS_MIN_FOR_ESTABLISHMENT = NB_POINTS_FOR_SLOW_SMOOTH_FILTER
-
 
     def __init__(self, GDAXControler, UIGraph):
 
@@ -48,38 +51,38 @@ class MarketData:
 
         if newSensitvityValue == 6:
             N = 1
-            WnFast=float(0.0333)  # 1/30
-            WnSlow=float(0.01)  # 1/100
+            WnFast = float(0.0333)  # 1/30
+            WnSlow = float(0.01)  # 1/100
             self.maxMACDValuePricePercentageForNormalization = 0.006
         elif newSensitvityValue == 5:
             N = 1
-            WnFast=float(0.01666)  # 1/60
-            WnSlow=float(0.005882)  # 1/170
+            WnFast = float(0.01666)  # 1/60
+            WnSlow = float(0.005882)  # 1/170
             self.maxMACDValuePricePercentageForNormalization = 0.007
         elif newSensitvityValue == 4:
             N = 1
-            WnFast=float(0.010)  # 1/80
-            WnSlow=float(0.0040)  # 1/230
+            WnFast = float(0.010)  # 1/80
+            WnSlow = float(0.0040)  # 1/230
             self.maxMACDValuePricePercentageForNormalization = 0.008
         elif newSensitvityValue == 3:
             N = 1
-            WnFast=float(0.008)  # 1/110
-            WnSlow=float(0.003)  # 1/250
+            WnFast = float(0.008)  # 1/110
+            WnSlow = float(0.003)  # 1/250
             self.maxMACDValuePricePercentageForNormalization = 0.01
         elif newSensitvityValue == 2:
             N = 1
-            WnFast=float(0.0040)  # 1/
-            WnSlow=float(0.0018)  # 1/
+            WnFast = float(0.0040)  # 1/
+            WnSlow = float(0.0018)  # 1/
             self.maxMACDValuePricePercentageForNormalization = 0.012
         elif newSensitvityValue == 1:
             N = 2
-            WnFast=float(0.01111)  # 1/90
-            WnSlow=float(0.0041667)  # 1/240
+            WnFast = float(0.01111)  # 1/90
+            WnSlow = float(0.0041667)  # 1/240
             self.maxMACDValuePricePercentageForNormalization = 0.012
         else:  # Should not happen
             N = 1
-            WnFast=float(0.0125)  # 1/80
-            WnSlow=float(0.004347)  # 1/230
+            WnFast = float(0.0125)  # 1/80
+            WnSlow = float(0.004347)  # 1/230
             self.maxMACDValuePricePercentageForNormalization = 0.012
 
         if self.totalNbIterations > 1:
@@ -89,11 +92,13 @@ class MarketData:
 
         print("MRKT - Coefficients updated. New self.maxMACDForNormalization is %s, WnFast = %s, WnSlow = %s" % (self.maxMACDForNormalization, WnFast, WnSlow))
 
+        # noinspection PyTupleAssignmentBalance
         self.bFast, self.aFast = signal.butter(N, float(WnFast), 'low')  # One gotcha is that Wn is a fraction of the Nyquist frequency (half the sampling frequency).
+        # noinspection PyTupleAssignmentBalance
         self.bSlow, self.aSlow = signal.butter(N, float(WnSlow), 'low')  # One gotcha is that Wn is a fraction of the Nyquist frequency (half the sampling frequency).
 
     def MRKT_AreIndicatorsEstablished(self):
-        #print("MRKT_AreIndicatorsEstablished - nb it %s  minRequested %s" % (self.totalNbIterations,self.MRKT_GetMinNumberOfRequiredSamplesForEstablishment()))
+        # print("MRKT_AreIndicatorsEstablished - nb it %s  minRequested %s" % (self.totalNbIterations,self.MRKT_GetMinNumberOfRequiredSamplesForEstablishment()))
         if self.totalNbIterations > self.NB_POINTS_MIN_FOR_ESTABLISHMENT:
             return True
         else:
@@ -185,7 +190,7 @@ class MarketData:
 
                 self.dataRefRiskLine.append(average)
             else:
-                pass # Keep last value
+                pass  # Keep last value
         else:
             self.dataRefRiskLine.append(0)
 
@@ -197,4 +202,3 @@ class MarketData:
                 self.dataRefMACD.append(localMACD * 100 / self.maxMACDForNormalization)
         else:
             self.dataRefMACD.append(0)
-

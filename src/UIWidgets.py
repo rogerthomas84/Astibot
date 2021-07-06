@@ -1,6 +1,9 @@
 import TradingBotConfig as theConfig
+# noinspection PyUnresolvedReferences
 from pyqtgraph.Qt import QtCore, QtGui
 
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class ButtonHoverStart(QtGui.QPushButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -9,13 +12,15 @@ class ButtonHoverStart(QtGui.QPushButton):
 
     def enterEvent(self, QEvent):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
-            self.lblToolTip.setText("Start / Stop live trading")            
+            self.lblToolTip.setText("Start / Stop live trading")
         else:
             self.lblToolTip.setText("Start / Stop simulated trading")
 
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
 
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class ButtonHoverPause(QtGui.QPushButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -28,6 +33,8 @@ class ButtonHoverPause(QtGui.QPushButton):
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
 
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class ButtonHoverSettings(QtGui.QPushButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -39,7 +46,9 @@ class ButtonHoverSettings(QtGui.QPushButton):
 
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
-       
+
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class ButtonHoverDonation(QtGui.QPushButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -52,6 +61,8 @@ class ButtonHoverDonation(QtGui.QPushButton):
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
 
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class ButtonHoverInfo(QtGui.QPushButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -63,7 +74,9 @@ class ButtonHoverInfo(QtGui.QPushButton):
 
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
-                                    
+
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class RadioHoverSimulation(QtGui.QRadioButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -75,7 +88,9 @@ class RadioHoverSimulation(QtGui.QRadioButton):
 
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
-        
+
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class RadioHoverTrading(QtGui.QRadioButton):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -86,9 +101,10 @@ class RadioHoverTrading(QtGui.QRadioButton):
         self.lblToolTip.setText("Trading mode: Astibot trades on live market. It will buy the dips and sell the tops on the current trading pair. Refresh is performed every 10 seconds. Depending on the market, the first trade can be initiated a few minutes or hours after the start. By using this mode, you give Astibot the control of your account balance.")
 
     def leaveEvent(self, QEvent):
-        self.lblToolTip.setText("")             
+        self.lblToolTip.setText("")
 
-         
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class SliderHoverRiskLevel(QtGui.QSlider):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -99,8 +115,10 @@ class SliderHoverRiskLevel(QtGui.QSlider):
         self.lblToolTip.setText("Adjust the level of the red dashed line (risk line): Astibot will not buy if the current price value is above this line. This line is updated with the past hours average price and it is weighted with your setting.")
 
     def leaveEvent(self, QEvent):
-        self.lblToolTip.setText("")  
-        
+        self.lblToolTip.setText("")
+
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyUnresolvedReferences
 class SliderHoverSensitivityLevel(QtGui.QSlider):
 
     def __init__(self, inLblToolTip, parent=None):
@@ -112,25 +130,25 @@ class SliderHoverSensitivityLevel(QtGui.QSlider):
 
     def leaveEvent(self, QEvent):
         self.lblToolTip.setText("")
-        
+
+
+# noinspection PyPep8Naming,PyUnusedLocal,PyAttributeOutsideInit,PyUnresolvedReferences
 class LabelClickable(QtGui.QLabel):
-    
+
     def __init__(self, parent):
         QtGui.QLabel.__init__(self, parent)
         self.UIsAreSet = False
-    
+
     def SetUIs(self, UISettings, UIDonation):
         self.theUISettings = UISettings
         self.theUIDonation = UIDonation
         self.UIsAreSet = True
-        
+
     def mousePressEvent(self, event):
         print("QLabelMouseClick")
-        
+
         if self.UIsAreSet is True:
             if ("Welcome" in self.text()) is True:
                 self.theUISettings.UIST_ShowWindow()
             elif ("here to unlock" in self.text()) is True:
                 self.theUIDonation.UILI_ShowWindow()
-    
-                

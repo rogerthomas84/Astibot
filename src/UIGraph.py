@@ -1,17 +1,22 @@
 from datetime import datetime
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
+# noinspection PyUnresolvedReferences
 from PyQt5.QtCore import QTime, QTimer
+# noinspection PyUnresolvedReferences
 from PyQt5.QtWidgets import QFrame
 import numpy as np
 import time
+# noinspection PyUnresolvedReferences
 from threading import Timer, Lock
 import pytz
 from tzlocal import get_localzone
+# noinspection PyUnresolvedReferences
 from random import randint
 
 
 import TradingBotConfig as theConfig
+# noinspection PyUnresolvedReferences
 from UIWidgets import ButtonHoverStart
 from UIWidgets import ButtonHoverStart
 from UIWidgets import ButtonHoverPause
@@ -28,6 +33,7 @@ from UIDonation import UIDonation
 from UIInfo import UIInfo
 
 
+# noinspection PyPep8Naming
 class TimeAxisItem(pg.AxisItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,6 +41,7 @@ class TimeAxisItem(pg.AxisItem):
 
     def tickStrings(self, values, scale, spacing):
 
+        valuesToReturn = []
         try:
             if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False:
                 valuesToReturn = [(datetime.fromtimestamp(value, self.localTimezone).strftime("%H:%M:%S\n%b%d")) for value in values]
@@ -309,8 +316,6 @@ class UIGraph:
             self.lblSensitivityLevelSlider1.setText("Dips sensitivity: %s/6" % str(self.currentSensitivitySliderValue))
             self.sensitivitySliderValueHasChanged = True
 
-
-
     def UIGR_hasSensitivityLevelValueChanged(self):
         return self.sensitivitySliderValueHasChanged
 
@@ -406,7 +411,6 @@ class UIGraph:
         self.rootRightBlock.setFixedWidth(40)
         self.mainGridLayout.addWidget(self.rootLeftBlock, 0, 0, 14, 1)
         self.mainGridLayout.addWidget(self.rootRightBlock, 0, 3, 14, 1)
-
 
     def initializeTopWindowWidgets(self):
 
@@ -512,7 +516,6 @@ class UIGraph:
         self.hBoxSliders2.addWidget(self.sliderSensitivityLevel)
         self.hBoxSliders2.addWidget(self.lblSensitivityLevelSlider3)
 
-
         # Part 2
         self.lblLivePrice = QtGui.QLabel()
         self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE = self.theSettings.SETT_GetSettings()["strCryptoType"] + str(" ") + str(self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE)
@@ -546,7 +549,6 @@ class UIGraph:
         self.mainGridLayout.addLayout(self.vBoxSliders, 6, 2, QtCore.Qt.AlignLeft)
         self.mainGridLayout.addWidget(self.rootMiddleBlock2, 7, 0, 1, 4)
 
-
         # Each column of the grid layout has the same total width proportion
         self.mainGridLayout.setColumnStretch(1, 1)
         self.mainGridLayout.setColumnStretch(2, 1)
@@ -556,7 +558,7 @@ class UIGraph:
 
         pg.setConfigOption('foreground', 'w')
         pg.setConfigOption('background', (32, 48, 68))
-        pg.GraphicsLayout(border=(100,100,100))
+        pg.GraphicsLayout(border=(100, 100, 100))
 
         self.strPlot1Title = str(self.theSettings.SETT_GetSettings()["strTradingPair"]) + ' Coinbase Pro Market Price (' + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ')'
         self.plot1 = pg.PlotWidget(title=self.strPlot1Title, axisItems={'bottom': TimeAxisItem(orientation='bottom')})
@@ -564,11 +566,11 @@ class UIGraph:
         self.plot1.setMouseEnabled(False, False)  # Mettre False, True pour release
         self.plot1.setMenuEnabled(False)
         axis = self.plot1.getAxis('bottom')  # This is the trick
-        axis.setStyle(textFillLimits = [(0, 0.7)])
+        axis.setStyle(textFillLimits=[(0, 0.7)])
 
-        #self.plot1.plotItem.vb.setBackgroundColor((15, 25, 34, 255))
+        # self.plot1.plotItem.vb.setBackgroundColor((15, 25, 34, 255))
         self.plot2 = pg.PlotWidget(title='Astibot decision indicator (normalized)')
-        self.plot2.showGrid(x=True,y=True,alpha=0.1)
+        self.plot2.showGrid(x=True, y=True, alpha=0.1)
         self.plot2.setYRange(-100, 100)
         self.plot2.setMouseEnabled(False, True)
         self.plot2.setMouseEnabled(False)
@@ -580,15 +582,15 @@ class UIGraph:
 
         # Graph curves initialization
         self.plot1GraphLivePrice = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPrice, name='     Price')  # , clipToView=True
-        self.plot1GraphLivePrice.setPen(color=(220,220,220), width=3)
+        self.plot1GraphLivePrice.setPen(color=(220, 220, 220), width=3)
         self.plot1GraphSmoothPriceFast = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceSmoothFast, name='    Price Fast MA')
-        self.plot1GraphSmoothPriceFast.setPen(color=(3,86,243), width=2)
+        self.plot1GraphSmoothPriceFast.setPen(color=(3, 86, 243), width=2)
         self.plot1GraphSmoothPriceSlow = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceSmoothSlow, name='    Price Slow MA')
-        self.plot1GraphSmoothPriceSlow.setPen(color=(230,79,6), width=2)
+        self.plot1GraphSmoothPriceSlow.setPen(color=(230, 79, 6), width=2)
         self.plot1GraphRiskLine = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinRiskLine, name='    Risk Line')
-        self.plot1GraphRiskLine.setPen(color=(255,46,46), width=2, style=QtCore.Qt.DotLine)
-        self.plot1Markers1 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker1, name='      Buy', pen=None, symbol='o', symbolPen=(43, 206, 55), symbolBrush=(43, 206, 55), symbolSize = 30)
-        self.plot1Markers2 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker2, name='      Sell', pen=None, symbol='o', symbolPen=(255, 0, 0), symbolBrush=(255, 0, 0), symbolSize = 30)
+        self.plot1GraphRiskLine.setPen(color=(255, 46, 46), width=2, style=QtCore.Qt.DotLine)
+        self.plot1Markers1 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker1, name='      Buy', pen=None, symbol='o', symbolPen=(43, 206, 55), symbolBrush=(43, 206, 55), symbolSize=30)
+        self.plot1Markers2 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker2, name='      Sell', pen=None, symbol='o', symbolPen=(255, 0, 0), symbolBrush=(255, 0, 0), symbolSize=30)
 
         # Graph 2 (Indicators) curves initialization
         self.plot2GraphIndicatorMACD = self.plot2.plot(x=self.graphDataTime, y=self.graphDataIndicatorMACD, pen='y', name='     MACD')
@@ -603,7 +605,6 @@ class UIGraph:
         self.timeOfLastSampleDisplayed = startTimeValue
 
         return tempTimeVector
-
 
     def UIGR_updateNextIterationData(self, newTime, newSpotPrice, newSmoothPriceFast, newSmoothPriceSlow, newRiskLineRawAvgValue, newIndicatorMACD):
         # Don't append data that were before the oldest time in the graphs and that are older than the last sample displayed
@@ -633,7 +634,6 @@ class UIGraph:
 
             self.totalNbIterations = self.totalNbIterations + 1
 
-
     # Experimentation pour live trading aussi
     def UIGR_updateGraphsSimuTimer(self):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False:
@@ -660,7 +660,6 @@ class UIGraph:
                 self.UIGR_SAFE_updateInfoText()
                 self.UIGR_SAFE_updateTotalProfit()
                 self.UIGR_SAFE_updateAccountsBalance()
-
 
     def UIGR_updateGraphs(self):
 
@@ -737,7 +736,6 @@ class UIGraph:
             self.maxInPlot1 = maxInPlot1
             self.plot1.setYRange(minInPlot1, maxInPlot1)
 
-
     def UIGR_updateAccountsBalance(self, EURBalance, CryptoBalance):
         self.strEURBalance = str(EURBalance)
 
@@ -765,7 +763,6 @@ class UIGraph:
         self.lblFiatBalance.setText(self.STR_LABEL_FIAT_BALANCE + self.strEURBalance + ' ' + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + strSimulationPrecision)
         self.lblCryptoMoneyBalance.setText(self.STR_LABEL_CRYPTO_BALANCE + self.strCryptoBalance + ' ' + str(self.theSettings.SETT_GetSettings()["strCryptoType"]) + strSimulationPrecision)
 
-
     def UIGR_updatePriceLbl(self, newPrice):
 
         self.priceLabelStr = str(newPrice)
@@ -774,8 +771,7 @@ class UIGraph:
         if self.isContinuousGraphRefreshEnabled is False:
             self.lblLivePrice.setText(self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE + self.priceLabelStr + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]))
         else:
-            pass # No need to set a flag, price lbl update is automatic in background
-
+            pass  # No need to set a flag, price lbl update is automatic in background
 
     def UIGR_SAFE_updatePriceLbl(self):
         self.lblLivePrice.setText(self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE + self.priceLabelStr + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]))
@@ -822,7 +818,7 @@ class UIGraph:
         if self.displayProfitAsInSimulation is True:
             self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (" + str(self.percentageProfit) + "%) (Simulation)")
         else:
-            self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.realProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (Theoric: " + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ")"  + " (" + str(self.percentageProfit) + "%)")
+            self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.realProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (Theoric: " + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ")" + " (" + str(self.percentageProfit) + "%)")
 
         if self.theoricProfit > 0:
             self.lblTotalGains.setStyleSheet(self.STR_QLABEL_PROFIT_GREEN_STYLESHEET)
@@ -830,7 +826,6 @@ class UIGraph:
             self.lblTotalGains.setStyleSheet(self.STR_QLABEL_PROFIT_RED_STYLESHEET)
         else:
             self.lblTotalGains.setStyleSheet(self.STR_QLABEL_STYLESHEET)
-
 
     def UIGR_updateInfoText(self, newInfoText, isError):
         self.lblInfoInErrorStyle = isError
@@ -907,10 +902,10 @@ class UIGraph:
             pass
 
     def UIGR_getRadioButtonSimulation(self):
-        return self.radioButtonSimulation;
+        return self.radioButtonSimulation
 
     def UIGR_getRadioButtonTrading(self):
-        return self.radioButtonTrading;
+        return self.radioButtonTrading
 
     def UIGR_SetRadioButtonsEnabled(self, bEnable):
         self.radioButtonSimulation.setEnabled(bEnable)
