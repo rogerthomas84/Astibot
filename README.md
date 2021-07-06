@@ -26,16 +26,17 @@ Astibot bases its decisions on 2 real-time indicators:
 
 ## How to use Astibot ?
 
-Astibot can run on any computer capable of runnning Python 3, including Raspberry Pi (very convenient for 24/7 trading).
+Astibot can run on any computer capable of running Python 3, including Raspberry Pi (very convenient for 24/7 trading).
 
 #### Install required dependencies
 
-pip3 install pyqt5 pyqtgraph tzlocal cbpro twilio scipy ipdb
+`pip3 install pyqt5 pyqtgraph tzlocal cbpro twilio scipy ipdb`
 
 #### Start-up
 
-1. python Astibot.py
-2. At first start-up, enter your Coinbase Pro API keys (view and trade permissions are required)
+1. Navigate into the `src` directory within this project using a terminal.
+2. `python Astibot.py` (or `python3 Astibot.py` on some machines)
+3. At first start-up, enter your Coinbase Pro API keys (view and trade permissions are required)
 
 ## Results
 
