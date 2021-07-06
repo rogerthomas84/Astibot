@@ -21,16 +21,16 @@ class GDAXCurrencies:
     @staticmethod
     def get_currencies_list():
         pairs = GDAXCurrencies.get_all_pairs()
-        map = []
+        currency_map = []
         for pair in pairs:
             pieces = pair.split('-')
-            map.append({
+            currency_map.append({
                 "full": pair,
                 "coin": pieces[0],
                 "fiat": pieces[1]
             })
 
-        return map
+        return currency_map
 
     @staticmethod
     def get_index_for_currency_pair(pair):
