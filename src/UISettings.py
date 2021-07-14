@@ -79,7 +79,7 @@ class UISettings(QtGui.QWidget):
 
         self.strTradingPair = self.theSettings.SETT_GetSettings()["strTradingPair"]
         self.strApplicableTradingPair = self.strTradingPair
-        self.comboTradingPair.setCurrentIndex(CBProCurrencies.get_index_for_currency_pair(self.strTradingPair))
+        self.comboTradingPair.setCurrentIndex(CBProCurrencies.instance().get_index_for_currency_pair(self.strTradingPair))
 
         self.strFiatType = self.theSettings.SETT_GetSettings()["strFiatType"]
         self.strCryptoType = self.theSettings.SETT_GetSettings()["strCryptoType"]
@@ -179,7 +179,7 @@ class UISettings(QtGui.QWidget):
 
     def EventComboTradingPairChanged(self):
         print("UIST - Combo Trading pair set to: %s" % str(self.comboTradingPair.currentIndex()))
-        all_data = CBProCurrencies.get_currencies_list()
+        all_data = CBProCurrencies.instance().get_currencies_list()
         try:
             a_currency = all_data[self.comboTradingPair.currentIndex()]
             self.strTradingPair = a_currency['full']
@@ -398,7 +398,7 @@ class UISettings(QtGui.QWidget):
         self.mainGridLayout2.addWidget(self.lblTradingPair, rowNumber, 0)
         self.comboTradingPair = QtGui.QComboBox()
         self.comboTradingPair.setView(QtGui.QListView())  # Necessary to allow height change
-        for dictionary in CBProCurrencies.get_currencies_list():
+        for dictionary in CBProCurrencies.instance().get_currencies_list():
             self.comboTradingPair.addItem(dictionary['full'])
         self.comboTradingPair.currentIndexChanged.connect(self.EventComboTradingPairChanged)
         self.comboTradingPair.setStyleSheet(self.STR_COMBO_STYLESHEET)
@@ -414,7 +414,7 @@ class UISettings(QtGui.QWidget):
         self.hBoxFiatAmount = QtGui.QHBoxLayout()
         self.sliderFiatAmount = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.sliderFiatAmount.setMinimum(1)
-        self.sliderFiatAmount.setMaximum(99)
+        self.sliderFiatAmount.setMaximum(100)
         self.sliderFiatAmount.setValue(50)
         self.sliderFiatAmount.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
         self.sliderFiatAmount.valueChanged.connect(self.EventMovedSliderFiatAmountInvest)

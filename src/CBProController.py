@@ -26,7 +26,7 @@ class CBProController(cbpro.OrderBook):
 
     def __init__(self, UIGraph, Settings):
 
-        first_currency = CBProCurrencies.get_all_pairs()[0]
+        first_currency = CBProCurrencies.instance().get_all_pairs()[0]
         super(CBProController, self).__init__(product_id=first_currency, log_to=False)
 
         self.theUIGraph = UIGraph
@@ -132,7 +132,7 @@ class CBProController(cbpro.OrderBook):
         try:
             self.accounts = self.clientAuth.get_accounts()
             time.sleep(0.05)
-            print("CBPro - Init, Accounts retrieving: %s" % self.accounts)
+            print("CBPro - Init, Accounts retrieved")
             if 'id' in self.accounts[0]:
                 print("CBPro - Successful accounts retrieving")
             else:

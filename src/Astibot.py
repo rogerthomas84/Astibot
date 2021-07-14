@@ -26,6 +26,10 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui  # Only useful for splash screen
 
 
+from CBProCurrencies import CBProCurrencies
+CBProCurrencies.instance()
+
+
 # noinspection PyUnresolvedReferences,PyPep8Naming
 class TradingBot(object):
 
