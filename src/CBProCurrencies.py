@@ -23,16 +23,19 @@ class CBProCurrencies:
             self._pairs = json_pairs
         else:
             self._pairs = [
-                "ADA-GBP",
-                "ANKR-GBP",
-                "BTC-GBP",
-                "DOT-GBP",
-                "CGLD-GBP",
-                "ETH-GBP",
-                "DOGE-GBP",
-                "FORTH-GBP",
-                "LTC-GBP",
-                "NU-GBP"
+                "BTC-USD",
+                "BTC-EUR",
+                "ETH-USD",
+                "ETH-EUR",
+                "LTC-USD",
+                "LTC-EUR",
+                "BCH-USD",
+                "BCH-EUR",
+                "ETC-USD",
+                "ETC-EUR",
+                "BCH-BTC",
+                "ETH-BTC",
+                "LTC-BTC"
             ]
 
         return self._pairs
