@@ -1,3 +1,5 @@
+import os
+import pathlib
 import pickle
 import ctypes # Message box popup
 
@@ -54,6 +56,9 @@ class Settings(object):
             self.isSettingsFilePresent = False
 
         self.SETT_DisplayCurrentSettings()
+
+    def SETT_get_resource_path_for_file(self, file_name):
+        return os.path.join(pathlib.Path(__file__).parent.resolve().parent.resolve().__str__(), 'res', file_name)
 
     def SETT_IsSettingsFilePresent(self):
         return self.isSettingsFilePresent

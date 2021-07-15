@@ -34,7 +34,7 @@ class UIInfo(QtGui.QWidget):
 
     RIGHT_LABELS_WIDTH_IN_PX = 75
 
-    def __init__(self):
+    def __init__(self, Settings):
         # Here, you should call the inherited class' init, which is QDialog
         QtGui.QWidget.__init__(self)
 
@@ -42,9 +42,10 @@ class UIInfo(QtGui.QWidget):
 
         # Window settings
         # self.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.theSettings = Settings
         self.setWindowTitle('Astibot Information')
         self.setStyleSheet("background-color:#203044;")
-        self.setWindowIcon(QtGui.QIcon("AstibotIcon.png"))
+        self.setWindowIcon(QtGui.QIcon(self.theSettings.SETT_get_resource_path_for_file("AstibotIcon.png")))
         self.setAutoFillBackground(True)
         self.setFixedSize(1060, 750)
 
@@ -133,7 +134,7 @@ class UIInfo(QtGui.QWidget):
 
         # White chart -------------------------------
         self.lblChartWhite = QtGui.QLabel("")
-        pixmap = QtGui.QPixmap('chart_white.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('chart_white.png'))
         self.lblChartWhite.setPixmap(pixmap)
         self.mainGridLayout.addWidget(self.lblChartWhite, rowNumber, 0, 1, 1, QtCore.Qt.AlignRight)
 
@@ -146,7 +147,7 @@ class UIInfo(QtGui.QWidget):
 
         # Orange chart -------------------------------
         self.lblChartOrange = QtGui.QLabel("")
-        pixmap = QtGui.QPixmap('chart_orange.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('chart_orange.png'))
         self.lblChartOrange.setPixmap(pixmap)
         self.mainGridLayout.addWidget(self.lblChartOrange, rowNumber, 0, 1, 1, QtCore.Qt.AlignRight)
 
@@ -159,7 +160,7 @@ class UIInfo(QtGui.QWidget):
 
         # Blue chart -------------------------------
         self.lblChartBlue = QtGui.QLabel("")
-        pixmap = QtGui.QPixmap('chart_blue.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('chart_blue.png'))
         self.lblChartBlue.setPixmap(pixmap)
         self.mainGridLayout.addWidget(self.lblChartBlue, rowNumber, 0, 1, 1, QtCore.Qt.AlignRight)
 
@@ -172,7 +173,7 @@ class UIInfo(QtGui.QWidget):
 
         # Red line -------------------------------
         self.lblChartRed = QtGui.QLabel("")
-        pixmap = QtGui.QPixmap('chart_red.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('chart_red.png'))
         self.lblChartRed.setPixmap(pixmap)
         self.mainGridLayout.addWidget(self.lblChartRed, rowNumber, 0, 1, 1, QtCore.Qt.AlignRight)
 
@@ -185,7 +186,7 @@ class UIInfo(QtGui.QWidget):
 
         # Buy Sells symbols -------------------------------
         self.lblChartSymbols = QtGui.QLabel("")
-        pixmap = QtGui.QPixmap('chart_symbols.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('chart_symbols.png'))
         self.lblChartSymbols.setPixmap(pixmap)
         self.mainGridLayout.addWidget(self.lblChartSymbols, rowNumber, 0, 1, 1, QtCore.Qt.AlignRight)
 
@@ -205,7 +206,7 @@ class UIInfo(QtGui.QWidget):
         rowNumber = rowNumber + 1
 
         self.lblChartYellow = QtGui.QLabel("")
-        pixmap = QtGui.QPixmap('chart_yellow.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('chart_yellow.png'))
         self.lblChartYellow.setPixmap(pixmap)
         self.mainGridLayout.addWidget(self.lblChartYellow, rowNumber, 0, 1, 1, QtCore.Qt.AlignRight)
 

@@ -1,3 +1,5 @@
+import os
+import pathlib
 from datetime import datetime
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
@@ -112,8 +114,8 @@ class UIGraph:
         self.firstGraphDataInitIsDone = False
 
         # Settings-dependant variables init
-        self.STR_LABEL_FIAT_BALANCE = str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " Account Balance : "
-        self.STR_LABEL_CRYPTO_BALANCE = str(self.theSettings.SETT_GetSettings()["strCryptoType"]) + " Account Balance : "
+        self.STR_LABEL_FIAT_BALANCE = str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " account balance : "
+        self.STR_LABEL_CRYPTO_BALANCE = str(self.theSettings.SETT_GetSettings()["strCryptoType"]) + " account balance : "
 
         # Window initialization
         self.theQtApp = QtApplication
@@ -121,7 +123,7 @@ class UIGraph:
         self.rootGrid = QtGui.QGridLayout()
         self.mainWidget.setWindowTitle('Astibot')
         self.mainWidget.resize(self.MAIN_WINDOW_WIDTH_IN_PX, self.MAIN_WINDOW_HEIGHT_IN_PX)
-        self.mainWidget.setWindowIcon(QtGui.QIcon("AstibotIcon.png"))
+        self.mainWidget.setWindowIcon(QtGui.QIcon(self.theSettings.SETT_get_resource_path_for_file("AstibotIcon.png")))
 
         # Customize main widget (window)
         self.mainWidget.setStyleSheet("background-color:#203044;")
@@ -183,7 +185,7 @@ class UIGraph:
         # Child windows
         self.theUISettings = UISettings(Settings)
         self.theUIDonation = UIDonation(Settings)
-        self.theUIInfo = UIInfo()
+        self.theUIInfo = UIInfo(Settings)
 
         # Set child UIs to clickable label that can open them
         self.lblInfo.SetUIs(self.theUISettings, self.theUIDonation)
@@ -360,7 +362,7 @@ class UIGraph:
         self.rootHboxTop = QtGui.QHBoxLayout()
         self.rootHboxTop.setContentsMargins(40, 0, 40, 0)  # left, top, right, bottom
         self.lblLogo = QtGui.QLabel("lblLogo")
-        pixmap = QtGui.QPixmap('AstibotLogo.png')
+        pixmap = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('AstibotLogo.png'))
         self.lblLogo.setPixmap(pixmap)
         self.rootHboxTop.addWidget(self.lblLogo)
         self.rootHboxTop.addWidget(self.lblVersion)
@@ -800,7 +802,7 @@ class UIGraph:
             if self.displayProfitAsInSimulation is True:
                 self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (" + str(self.percentageProfit) + "%) (Simulation)")
             else:
-                self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.realProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (Theoric: " + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ")" + " (" + str(self.percentageProfit) + "%)")
+                self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.realProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (Theoretic: " + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ")" + " (" + str(self.percentageProfit) + "%)")
 
             if self.theoricProfit > 0:
                 self.lblTotalGains.setStyleSheet(self.STR_QLABEL_PROFIT_GREEN_STYLESHEET)
@@ -815,7 +817,7 @@ class UIGraph:
         if self.displayProfitAsInSimulation is True:
             self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (" + str(self.percentageProfit) + "%) (Simulation)")
         else:
-            self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.realProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (Theoric: " + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ")" + " (" + str(self.percentageProfit) + "%)")
+            self.lblTotalGains.setText(self.STR_LABEL_TOTAL_GAINS + str(self.realProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " (Theoretic: " + str(self.theoricProfit) + " " + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ")" + " (" + str(self.percentageProfit) + "%)")
 
         if self.theoricProfit > 0:
             self.lblTotalGains.setStyleSheet(self.STR_QLABEL_PROFIT_GREEN_STYLESHEET)
@@ -984,8 +986,8 @@ class UIGraph:
         self.lblTotalGains.setText(self.lblTotalGains.text().replace("GBP", "---"))
         self.lblTotalGains.setText(self.lblTotalGains.text().replace("---", self.theSettings.SETT_GetSettings()["strFiatType"]))
 
-        self.STR_LABEL_FIAT_BALANCE = str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " Account Balance : "
-        self.STR_LABEL_CRYPTO_BALANCE = str(self.theSettings.SETT_GetSettings()["strCryptoType"]) + " Account Balance : "
+        self.STR_LABEL_FIAT_BALANCE = str(self.theSettings.SETT_GetSettings()["strFiatType"]) + " account balance : "
+        self.STR_LABEL_CRYPTO_BALANCE = str(self.theSettings.SETT_GetSettings()["strCryptoType"]) + " account balance : "
 
         self.strPlot1Title = str(self.theSettings.SETT_GetSettings()["strTradingPair"]) + ' Coinbase Pro Market Price (' + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ')'
         self.plot1.setTitle(self.strPlot1Title)

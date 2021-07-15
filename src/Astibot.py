@@ -40,16 +40,16 @@ class TradingBot(object):
         self.isInitializing = True
         self.iterationCounter = 0
         self.historicPriceIterationCounter = 0
+        self.theSettings = Settings()
 
         self.app = pg.QtGui.QApplication(['Astibot'])
 
         # Show Splash Screen
-        splash_pix = QtGui.QPixmap('AstibotSplash.png')
+        splash_pix = QtGui.QPixmap(self.theSettings.SETT_get_resource_path_for_file('AstibotSplash.png'))
         splash = QtGui.QSplashScreen(splash_pix, QtCore.Qt.WindowStaysOnTopHint)
         splash.show()
 
         # Instantiate objects
-        self.theSettings = Settings()
         self.theUIGraph = UIGraph(self.app, self.theSettings)
         self.theCBProController = CBProController(self.theUIGraph, self.theSettings)
         self.theMarketData = MarketData(self.theCBProController, self.theUIGraph)

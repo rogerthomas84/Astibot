@@ -54,7 +54,7 @@ class UIDonation(QtGui.QWidget):
         self.setWindowModality(QtCore.Qt.ApplicationModal)
         self.setWindowTitle('Astibot')
         self.setStyleSheet("background-color:#203044;")
-        self.setWindowIcon(QtGui.QIcon("AstibotIcon.png"))
+        self.setWindowIcon(QtGui.QIcon(self.theSettings.SETT_get_resource_path_for_file("AstibotIcon.png")))
         self.setAutoFillBackground(True)
         self.setFixedSize(450, 350)
 
