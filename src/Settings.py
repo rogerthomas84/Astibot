@@ -65,6 +65,9 @@ class Settings(object):
         for key, value in self.settings.items():
             print("SETT - %s: %s" % (key, value))
 
+    def SETT_GetActiveTradingPair(self):
+        return self.SETT_GetSettings()["strTradingPair"]
+
     def SETT_NotifyTradingPairHasChanged(self):
         self.tradingPairHasChanged = True
 

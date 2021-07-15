@@ -26,7 +26,9 @@ class CBProController(cbpro.OrderBook):
 
     def __init__(self, UIGraph, Settings):
 
-        first_currency = CBProCurrencies.instance().get_all_pairs()[0]
+        currencies = CBProCurrencies.instance()
+        first_currency = currencies.get_all_pairs()[0]
+        currencies.get_min_sizes()
         super(CBProController, self).__init__(product_id=first_currency, log_to=False)
 
         self.theUIGraph = UIGraph
@@ -669,37 +671,14 @@ class CBProController(cbpro.OrderBook):
             return False
 
     def CBPro_IsAmountToBuyAboveMinimum(self, amountOfCryptoToBuy):
-        if self.theSettings.SETT_GetSettings()["strCryptoType"] == "BTC":
-            if amountOfCryptoToBuy > 0.001:
-                return True
-            else:
-                return False
+        min_size = CBProCurrencies.instance().get_min_size_for_pair(
+            self.theSettings.SETT_GetActiveTradingPair()
+        )  # type: float
+        if min_size is None:
+            print("CBPro: min_sizes was None. Returning True")
+            return True
 
-        if self.theSettings.SETT_GetSettings()["strCryptoType"] == "BCH":
-            if amountOfCryptoToBuy > 0.01:
-                return True
-            else:
-                return False
-
-        if self.theSettings.SETT_GetSettings()["strCryptoType"] == "LTC":
-            if amountOfCryptoToBuy > 0.1:
-                return True
-            else:
-                return False
-
-        if self.theSettings.SETT_GetSettings()["strCryptoType"] == "ETH":
-            if amountOfCryptoToBuy > 0.01:
-                return True
-            else:
-                return False
-
-        if self.theSettings.SETT_GetSettings()["strCryptoType"] == "ETC":
-            if amountOfCryptoToBuy > 0.1:
-                return True
-            else:
-                return False
-
-        return True
+        return amountOfCryptoToBuy > min_size
 
     def CBPro_WithdrawBTC(self, destinationAddress, amountToWithdrawInBTC):
         print("CBPro - Withdraw BTC")

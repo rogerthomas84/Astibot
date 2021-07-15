@@ -553,6 +553,7 @@ class TransactionManager(object):
                                 # Include held account balance because if we replace an order already set, the Fiat amount is held by the current
                                 # order (that will be canceled before placing the new order)
                                 buyCapabilityInCrypto = self.computeBuyCapabilityInCrypto(True)
+                                print("Buy capability: %s" % (buyCapabilityInCrypto))
                                 ratioOfCryptoCapabilityToBuy = float(self.theSettings.SETT_GetSettings()["investPercentage"]) * 0.01
 
                                 # Check if buy price is not too high
@@ -571,6 +572,7 @@ class TransactionManager(object):
                             elif self.orderPlacingType == "SELL":
                                 print("TRNM - threadOrderPlacing: Placing / Replacing a Sell limit order on the top of the order book")
                                 sellAmountInCrypto = self.theCBProController.CBPro_GetCryptoAccountBalance() + self.theCBProController.CBPro_GetCryptoAccountBalanceHeld() - theConfig.CONFIG_CRYPTO_PRICE_QUANTUM
+                                print("Sell capability: %s" % (sellAmountInCrypto))
                                 # Check if sell price is not too high
                                 if liveBestAskPrice > self.orderPlacingMinMaxPrice:
                                     self.orderPlacingCurrentPriceInFiat = liveBestAskPrice
