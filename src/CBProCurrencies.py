@@ -19,27 +19,9 @@ class CBProCurrencies:
         if self._pairs is not None:
             return self._pairs
 
-        json_pairs = self._load_pairs()
-
-        if len(json_pairs) > 0:
-            self._pairs = json_pairs
-        else:
-            self._pairs = [
-                "BTC-USD",
-                "BTC-EUR",
-                "ETH-USD",
-                "ETH-EUR",
-                "LTC-USD",
-                "LTC-EUR",
-                "BCH-USD",
-                "BCH-EUR",
-                "ETC-USD",
-                "ETC-EUR",
-                "BCH-BTC",
-                "ETH-BTC",
-                "LTC-BTC"
-            ]
-
+        min_sizes = list(self.get_min_sizes().keys())
+        min_sizes.sort()
+        self._pairs = min_sizes
         return self._pairs
 
     def get_currencies_list(self):
@@ -98,15 +80,3 @@ class CBProCurrencies:
 
     def get_index_for_currency_pair(self, pair):
         return self.get_all_pairs().index(pair)
-
-    def _load_pairs(self):
-        """
-        Loads the currencies.json file
-        """
-        tmp = pathlib.Path(__file__).parent.resolve().__str__()
-        json_file_path = tmp + os.path.sep + "currencies.json"
-        proposed = pathlib.Path(json_file_path)
-        if proposed.exists() is False or proposed.is_file() is False:
-            return []
-        content = json.load(open(json_file_path))
-        return content
