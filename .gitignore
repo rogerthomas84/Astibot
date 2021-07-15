@@ -1,3 +1,5 @@
 src/__pycache__/
 astibot.settings
 src/currencies.json
+vendor/*
+!vendor/.gitkeep

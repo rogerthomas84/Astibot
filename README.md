@@ -30,7 +30,12 @@ Astibot can run on any computer capable of running Python 3, including Raspberry
 
 #### Install required dependencies
 
-`pip3 install pyqt5 pyqtgraph tzlocal cbpro twilio scipy ipdb`
+Dependencies are stored in the local `vendor` directory.
+
+```
+cd Astibot
+pip3 install -r requirements.txt --target=./vendor --upgrade
+```
 
 #### Start-up
 

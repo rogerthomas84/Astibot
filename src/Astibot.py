@@ -1,6 +1,6 @@
 #!.
 
-
+import fix_path
 # noinspection PyUnresolvedReferences
 import threading
 # noinspection PyUnresolvedReferences
@@ -22,11 +22,11 @@ from AppState import AppState
 # noinspection PyUnresolvedReferences
 import TradingBotConfig as theConfig
 import pyqtgraph as pg
+from CBProCurrencies import CBProCurrencies
 
 from pyqtgraph.Qt import QtCore, QtGui  # Only useful for splash screen
 
 
-from CBProCurrencies import CBProCurrencies
 CBProCurrencies.instance()
 
 
