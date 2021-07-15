@@ -15,7 +15,7 @@ Astibot bases its decisions on 2 real-time indicators:
 * Live trading mode (real-time trading)
 * Simulation mode (to backtest the settings)
 * Customizable MACD-like decision indicator (to detect buy and sell opportunities)
-* Supported Coinbase pro trading pairs must be defined in the `src/CBProCurrencies.py` file within the `get_all_pairs` method.
+* All Coinbase Pro trading pairs are supported and are refreshed at launch
 
 ## Advanced features
 * Risk line: a customizable, real-time updated limit price limit above which Astibot will never buy
