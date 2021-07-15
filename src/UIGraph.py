@@ -251,8 +251,7 @@ class UIGraph:
         if self.areNewSamplesRequested is True:
             self.areNewSamplesRequested = False
             return True
-        else:
-            return False
+        return False
 
     def EventStartButtonClick(self):
         self.bStartButtonHasBeenClicked = True
@@ -276,21 +275,18 @@ class UIGraph:
         if self.bStartButtonHasBeenClicked is True:
             self.bStartButtonHasBeenClicked = False
             return True
-        else:
-            return False
+        return False
 
     def UIGR_IsPauseButtonClicked(self):
         if self.bPauseButtonHasBeenClicked is True:
             self.bPauseButtonHasBeenClicked = False
             return True
-        else:
-            return False
+        return False
 
     def UIGR_GetSelectedRadioMode(self):
         if self.radioButtonSimulation.isChecked() is True:
             return "Simulation"
-        else:
-            return "Trading"
+        return "Trading"
 
     def EventMovedSliderRiskLevel(self):
 
