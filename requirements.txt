@@ -1,0 +1,7 @@
+pyqt5
+pyqtgraph
+tzlocal
+cbpro
+twilio
+scipy
+ipdb
