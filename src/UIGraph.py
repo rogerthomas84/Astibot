@@ -465,7 +465,8 @@ class UIGraph:
         self.hBox1.addWidget(self.buttonStart, QtCore.Qt.AlignLeft)
 
         # Slider Risk level
-        self.lblRiskLevelSlider1 = QtGui.QLabel("Risk level: ")
+        risklevel_value = round((theConfig.CONFIG_RiskLinePercentsAboveThresholdToBuy - 1) * 100, 1)
+        self.lblRiskLevelSlider1 = QtGui.QLabel("Risk level: %s%%" % str(risklevel_value))
         self.lblRiskLevelSlider1.setFixedWidth(140)
         self.lblRiskLevelSlider2 = QtGui.QLabel("Low")
         self.lblRiskLevelSlider2.setFixedWidth(30)
@@ -484,7 +485,7 @@ class UIGraph:
         self.lblRiskLevelSlider3.setStyleSheet(self.STR_QLABEL_STYLESHEET)
         self.sliderRiskLevel.setStyleSheet(self.STR_QSLIDER_STYLESHEET)
 
-        self.lblSensitivityLevelSlider1 = QtGui.QLabel("Dips sensitivity: ")
+        self.lblSensitivityLevelSlider1 = QtGui.QLabel("Dips sensitivity: %s/6" % str(self.currentSensitivitySliderValue))
         self.lblSensitivityLevelSlider1.setFixedWidth(140)
         self.lblSensitivityLevelSlider2 = QtGui.QLabel("Low")
         self.lblSensitivityLevelSlider2.setFixedWidth(30)
