@@ -5,6 +5,7 @@ import threading
 
 # noinspection PyUnresolvedReferences
 from CBProController import CBProController
+from CBProCurrencies import CBProCurrencies
 # noinspection PyUnresolvedReferences
 from UIGraph import UIGraph
 import TradingBotConfig as theConfig
@@ -271,7 +272,7 @@ class TransactionManager(object):
 
     def TRNM_SellNow(self, isStopLossSell):
         if (self.theCBProController.CBPro_IsConnectedAndOperational() == "True") or (theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is False):
-            if self.currentBuyAmountInCryptoWithoutFee >= theConfig.MIN_CRYPTO_AMOUNT_REQUESTED_TO_SELL:
+            if self.currentBuyAmountInCryptoWithoutFee >= CBProCurrencies.instance().get_min_size_for_pair(self.theSettings.SETT_GetActiveTradingPair()):
                 bOrderIsSuccessful = False
 
                 # Refresh account balances =================================================================================

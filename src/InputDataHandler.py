@@ -100,9 +100,8 @@ class InputDataHandler(object):
             startTimeStampRequested = time.time() - (theConfig.NB_HISTORIC_DATA_HOURS_TO_PRELOAD_FOR_TRADING * 3600)
             self.theCBProController.CBPro_SetReadIndexFromPos(startTimeStampRequested)
 
-            nbOfSamplesToDisplayOnGraph = theConfig.CONFIG_NB_POINTS_LIVE_TRADING_GRAPH
-            print("INDH - Choosen to display %s points on graph" % nbOfSamplesToDisplayOnGraph)
-            self.theUIGraph.UIGR_ResetAllGraphData(False, -1, int(nbOfSamplesToDisplayOnGraph))
+            print("INDH - Choosen to display %s points on graph" % theConfig.CONFIG_NB_POINTS_LIVE_TRADING_GRAPH)
+            self.theUIGraph.UIGR_ResetAllGraphData(False, -1, int(theConfig.CONFIG_NB_POINTS_LIVE_TRADING_GRAPH))
 
             # noinspection PyUnusedLocal
             [self.retrievedTime, self.retrievedPrice, endOfList] = self.theCBProController.CBPro_GetNextHistoricDataSample()
