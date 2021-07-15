@@ -623,11 +623,14 @@ class CBProController(cbpro.OrderBook):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
             if theConfig.CONFIG_ENABLE_REAL_TRANSACTIONS is True:
                 # Prepare the right amount to buy precision. Smallest CBPro unit is 0.00000001
-                amountToBuyInBTC = round(amountToBuyInBTC, 8)
+                amountToBuyInBTC = CBProCurrencies.instance().truncate_crypto_quantity_for_order(
+                    amountToBuyInBTC,
+                    CBProCurrencies.instance().get_min_size_for_pair(self.theSettings.SETT_GetActiveTradingPair())
+                )
 
                 # Send Market order
                 buyRequestReturn = self.clientAuth.buy(size=amountToBuyInBTC, product_id=self.productStr, order_type='market')
-                print("CBPro - Actual buy sent with MARKET order. Amount is %s BTC" % amountToBuyInBTC)
+                print("CBPro - Actual buy sent with MARKET order. Amount is %s" % amountToBuyInBTC)
 
                 print("CBPro - Buy Request return is : \n %s \nCBPro - End of Request Return" % buyRequestReturn)
 
@@ -646,7 +649,10 @@ class CBProController(cbpro.OrderBook):
         if theConfig.CONFIG_INPUT_MODE_IS_REAL_MARKET is True:
             if theConfig.CONFIG_ENABLE_REAL_TRANSACTIONS is True:
                 # Prepare the right amount to sell precision. Smallest CBPro unit is 0.00000001
-                amountToSellInBTC = round(amountToSellInBTC, 8)
+                amountToSellInBTC = CBProCurrencies.instance().truncate_crypto_quantity_for_order(
+                    amountToSellInBTC,
+                    CBProCurrencies.instance().get_min_size_for_pair(self.theSettings.SETT_GetActiveTradingPair())
+                )
 
                 # Send Market order
                 sellRequestReturn = self.clientAuth.sell(size=amountToSellInBTC, product_id=self.productStr, order_type='market')
