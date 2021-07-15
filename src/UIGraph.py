@@ -415,10 +415,10 @@ class UIGraph:
 
         self.rootMiddleBlock1 = QtGui.QWidget()
         self.rootMiddleBlock1.setStyleSheet(self.STR_BORDER_BLOCK_STYLESHEET)
-        self.rootMiddleBlock1.setFixedHeight(15)
+        self.rootMiddleBlock1.setFixedHeight(1)
         self.rootMiddleBlock2 = QtGui.QWidget()
         self.rootMiddleBlock2.setStyleSheet(self.STR_BORDER_BLOCK_STYLESHEET)
-        self.rootMiddleBlock2.setFixedHeight(15)
+        self.rootMiddleBlock2.setFixedHeight(1)
 
         # Part 1
         self.hBox1 = QtGui.QHBoxLayout()
@@ -426,7 +426,7 @@ class UIGraph:
         self.vBoxSliders = QtGui.QVBoxLayout()
         self.hBoxSliders1 = QtGui.QHBoxLayout()
         self.hBoxSliders2 = QtGui.QHBoxLayout()
-        self.hBox1.setSpacing(10)
+        self.hBox1.setSpacing(5)
 
         self.radioButtonSimulation = RadioHoverSimulation(self.lblToolTip, self.STR_RADIO_SIMULATION)
         self.radioButtonSimulation.setChecked(False)
@@ -443,14 +443,14 @@ class UIGraph:
         self.buttonPause.setVisible(True)
         self.buttonPause.clicked.connect(self.EventPauseButtonClick)
         self.buttonPause.setFixedWidth(80)
-        self.buttonPause.setFixedHeight(60)
+        self.buttonPause.setFixedHeight(50)
         self.buttonPause.setStyleSheet(self.STR_QBUTTON_PAUSE_STYLESHEET)
         self.buttonPause.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.buttonStart = ButtonHoverStart(self.lblToolTip, self.STR_BUTTON_START)
         self.buttonStart.setVisible(True)
         self.buttonStart.clicked.connect(self.EventStartButtonClick)
         self.buttonStart.setFixedWidth(80)
-        self.buttonStart.setFixedHeight(60)
+        self.buttonStart.setFixedHeight(50)
         self.buttonStart.setStyleSheet(self.STR_QBUTTON_START_STYLESHEET)
         self.buttonStart.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
