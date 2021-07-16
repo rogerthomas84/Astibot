@@ -41,11 +41,11 @@ pip3 install -r requirements.txt --target=./vendor --upgrade
 
 1. Navigate into the `src` directory within this project using a terminal.
 2. `python Astibot.py` (or `python3 Astibot.py` on some machines)
-3. At first start-up, enter your Coinbase Pro API keys (view and trade permissions are required)
+3. At first start-up, enter your Coinbase Pro API keys (view and trade permissions are both required)
 
 ## Results
 
-Let's talk about the key topic! I have run Astibot serveral weeks on my Raspberry pi.
+Let's talk about the key topic! I have run Astibot several weeks on my Raspberry pi.
 Here are my conclusions:
 * Astibot needs volatility to make profit: a 0.8% - 1% price amplitude on the short term chart is a minimum. These variations are required to detect dips and tops properly with the smoothing indicators, and to cover the buy and sell fees.
 * Astibot runs well during sideways periods. If volume and volatility are good, Astibot can outperform the chart.

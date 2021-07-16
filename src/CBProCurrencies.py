@@ -73,6 +73,12 @@ class CBProCurrencies:
         products = cbpro.PublicClient().get_products()
         min_sizes = {}
         for p in products:  # type: dict
+            if p.get("fx_stablecoin") is True:
+                continue
+            if p.get("status") != "online":
+                continue
+            if p.get("trading_disabled") is not False:
+                continue
             min_sizes[p.get("id")] = float(p.get("base_increment"))
         self._min_sizes = min_sizes
         print("CBProCurrencies: Base increment sizes retrieved")
