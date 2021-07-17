@@ -1,7 +1,7 @@
-pyqt5
-pyqtgraph
-tzlocal
-cbpro
-twilio
-scipy
-ipdb
+pyqt5==5.15.4
+pyqtgraph==0.12.2
+tzlocal==3.0b1
+cbpro==1.1.4
+twilio==6.62.0
+scipy==1.7.0
+ipdb==0.13.9
