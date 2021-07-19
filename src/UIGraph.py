@@ -59,7 +59,7 @@ class TimeAxisItem(pg.AxisItem):
 class UIGraph:
 
     MAIN_WINDOW_WIDTH_IN_PX = 1120
-    MAIN_WINDOW_HEIGHT_IN_PX = 900
+    MAIN_WINDOW_HEIGHT_IN_PX = 480
 
     MAX_NB_POINTS_ON_PLOT = 2000
     Y_AXIS_TOP_MARGIN_IN_EXTREMUM_PERCENT = 1.0001
@@ -358,7 +358,7 @@ class UIGraph:
 
         self.rootTopBlock = QtGui.QWidget()
         self.rootTopBlock.setStyleSheet(self.STR_BORDER_BLOCK_STYLESHEET)
-        self.rootTopBlock.setFixedHeight(60)
+        self.rootTopBlock.setFixedHeight(30)
         self.rootHboxTop = QtGui.QHBoxLayout()
         self.rootHboxTop.setContentsMargins(40, 0, 40, 0)  # left, top, right, bottom
         self.lblLogo = QtGui.QLabel("lblLogo")
@@ -425,10 +425,11 @@ class UIGraph:
         # Part 1
         self.hBox1 = QtGui.QHBoxLayout()
         self.vBoxRadioModeButtons = QtGui.QVBoxLayout()
+        self.vBoxRadioModeButtons.setSpacing(2)
         self.vBoxSliders = QtGui.QVBoxLayout()
         self.hBoxSliders1 = QtGui.QHBoxLayout()
         self.hBoxSliders2 = QtGui.QHBoxLayout()
-        self.hBox1.setSpacing(5)
+        self.hBox1.setSpacing(2)
 
         self.radioButtonSimulation = RadioHoverSimulation(self.lblToolTip, self.STR_RADIO_SIMULATION)
         self.radioButtonSimulation.setChecked(False)
@@ -445,14 +446,14 @@ class UIGraph:
         self.buttonPause.setVisible(True)
         self.buttonPause.clicked.connect(self.EventPauseButtonClick)
         self.buttonPause.setFixedWidth(80)
-        self.buttonPause.setFixedHeight(50)
+        self.buttonPause.setFixedHeight(40)
         self.buttonPause.setStyleSheet(self.STR_QBUTTON_PAUSE_STYLESHEET)
         self.buttonPause.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.buttonStart = ButtonHoverStart(self.lblToolTip, self.STR_BUTTON_START)
         self.buttonStart.setVisible(True)
         self.buttonStart.clicked.connect(self.EventStartButtonClick)
         self.buttonStart.setFixedWidth(80)
-        self.buttonStart.setFixedHeight(50)
+        self.buttonStart.setFixedHeight(40)
         self.buttonStart.setStyleSheet(self.STR_QBUTTON_START_STYLESHEET)
         self.buttonStart.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
@@ -520,11 +521,11 @@ class UIGraph:
         self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE = self.theSettings.SETT_GetSettings()["strCryptoType"] + str(" ") + str(self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE)
         self.lblLivePrice.setText(self.STR_LABEL_MONEY_MIDDLEMARKET_PRICE)
         self.lblInfo = LabelClickable(self.STR_LABEL_INFO)
-        self.lblInfo.setFixedHeight(24)
+        self.lblInfo.setFixedHeight(14)
         self.lblCurrentState = QtGui.QLabel(self.STR_LABEL_CURRENT_STATE)
         self.lblFiatBalance = QtGui.QLabel(self.STR_LABEL_FIAT_BALANCE)
         self.lblCryptoMoneyBalance = QtGui.QLabel(self.STR_LABEL_CRYPTO_BALANCE)
-        self.lblCryptoMoneyBalance.setFixedHeight(20)
+        self.lblCryptoMoneyBalance.setFixedHeight(14)
         self.lblTotalGains = QtGui.QLabel(self.STR_LABEL_TOTAL_GAINS)
 
         self.lblLivePrice.setStyleSheet(self.STR_QLABEL_STYLESHEET)
@@ -560,7 +561,7 @@ class UIGraph:
         pg.GraphicsLayout(border=(100, 100, 100))
 
         self.strPlot1Title = str(self.theSettings.SETT_GetSettings()["strTradingPair"]) + ' Coinbase Pro Market Price (' + str(self.theSettings.SETT_GetSettings()["strFiatType"]) + ')'
-        self.plot1 = pg.PlotWidget(title=self.strPlot1Title, axisItems={'bottom': TimeAxisItem(orientation='bottom')})
+        self.plot1 = pg.PlotWidget(title=None, axisItems={'bottom': TimeAxisItem(orientation='bottom')})
         self.plot1.setYRange(self.minInPlot1, self.maxInPlot1)
         self.plot1.setMouseEnabled(False, False)  # Mettre False, True pour release
         self.plot1.setMenuEnabled(False)
@@ -568,7 +569,7 @@ class UIGraph:
         axis.setStyle(textFillLimits=[(0, 0.7)])
 
         # self.plot1.plotItem.vb.setBackgroundColor((15, 25, 34, 255))
-        self.plot2 = pg.PlotWidget(title='Astibot decision indicator (normalized)')
+        self.plot2 = pg.PlotWidget(title=None)
         self.plot2.showGrid(x=True, y=True, alpha=0.1)
         self.plot2.setYRange(-100, 100)
         self.plot2.setMouseEnabled(False, True)
@@ -581,15 +582,15 @@ class UIGraph:
 
         # Graph curves initialization
         self.plot1GraphLivePrice = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPrice, name='     Price')  # , clipToView=True
-        self.plot1GraphLivePrice.setPen(color=(220, 220, 220), width=3)
+        self.plot1GraphLivePrice.setPen(color=(220, 220, 220), width=1)
         self.plot1GraphSmoothPriceFast = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceSmoothFast, name='    Price Fast MA')
-        self.plot1GraphSmoothPriceFast.setPen(color=(3, 86, 243), width=2)
+        self.plot1GraphSmoothPriceFast.setPen(color=(3, 86, 243), width=1)
         self.plot1GraphSmoothPriceSlow = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceSmoothSlow, name='    Price Slow MA')
-        self.plot1GraphSmoothPriceSlow.setPen(color=(230, 79, 6), width=2)
+        self.plot1GraphSmoothPriceSlow.setPen(color=(230, 79, 6), width=1)
         self.plot1GraphRiskLine = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinRiskLine, name='    Risk Line')
-        self.plot1GraphRiskLine.setPen(color=(255, 46, 46), width=2, style=QtCore.Qt.DotLine)
-        self.plot1Markers1 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker1, name='      Buy', pen=None, symbol='o', symbolPen=(43, 206, 55), symbolBrush=(43, 206, 55), symbolSize=30)
-        self.plot1Markers2 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker2, name='      Sell', pen=None, symbol='o', symbolPen=(255, 0, 0), symbolBrush=(255, 0, 0), symbolSize=30)
+        self.plot1GraphRiskLine.setPen(color=(255, 46, 46), width=1, style=QtCore.Qt.DotLine)
+        self.plot1Markers1 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker1, name='      Buy', pen=None, symbol='o', symbolPen=(43, 206, 55), symbolBrush=(43, 206, 55), symbolSize=10)
+        self.plot1Markers2 = self.plot1.plot(x=self.graphDataTime, y=self.graphDataBitcoinPriceMarker2, name='      Sell', pen=None, symbol='o', symbolPen=(255, 0, 0), symbolBrush=(255, 0, 0), symbolSize=10)
 
         # Graph 2 (Indicators) curves initialization
         self.plot2GraphIndicatorMACD = self.plot2.plot(x=self.graphDataTime, y=self.graphDataIndicatorMACD, pen='y', name='     MACD')
